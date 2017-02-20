@@ -16,15 +16,10 @@ MPI_Comm_rank(MPI_COMM_WORLD,&taskid);
 MPI_Get_processor_name(hostname, &len);
 
 int size;
-int max = 100;
+int max = 10000;
 int interval = 1;
 
 int* val = malloc(sizeof(int) * max);
-FILE* fout = NULL;
-
-if(taskid == MASTER){
-  fout = fopen("results.txt", "w");
-}
 
 for(size = 1; size < max;size += interval){
   if(taskid == MASTER){
@@ -37,8 +32,7 @@ for(size = 1; size < max;size += interval){
     MPI_Recv(val, size, MPI_INT, RECEIVER, msgtag,MPI_COMM_WORLD,&status);
     end = MPI_Wtime();
 
-    printf("%f seconds over %d items",end-start, size);
-    fprintf(fout, "%d, %f\n",size, end-start);
+    printf("%f seconds over %d items\n",end-start, size);
   }
   else if(taskid == RECEIVER){
     MPI_Status status;
@@ -47,10 +41,6 @@ for(size = 1; size < max;size += interval){
     MPI_Recv(val, size, MPI_INT, MASTER, msgtag,MPI_COMM_WORLD,&status);
     MPI_Send(val, size, MPI_INT, MASTER, msgtag,MPI_COMM_WORLD);
   }
-}
-
-if(taskid == MASTER){
-  fclose(fout);
 }
 
 free(val);
