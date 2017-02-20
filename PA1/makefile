@@ -1,5 +1,5 @@
-PA1: PA1.c
-	mpicc -lmpi -o PA1 PA1.c
+PA1: proj1.c
+	mpicc -lmpi -o proj1 proj1.c
 
 clean:
-	$(RM) PA1
+	$(RM) proj1

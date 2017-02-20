@@ -5,4 +5,4 @@
 #SBATCH --mail-user=shaile@h1.cse.unr.edu
 #SBATCH --mail-type=ALL
 
-srun source/PA1.c
+srun proj1
