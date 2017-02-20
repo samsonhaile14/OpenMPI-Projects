@@ -16,7 +16,7 @@ MPI_Comm_rank(MPI_COMM_WORLD,&taskid);
 MPI_Get_processor_name(hostname, &len);
 
 int size;
-int max = 10000;
+int max = 10000000;
 int interval = 1;
 
 int* val = malloc(sizeof(int) * max);
@@ -32,7 +32,7 @@ for(size = 1; size < max;size += interval){
     MPI_Recv(val, size, MPI_INT, RECEIVER, msgtag,MPI_COMM_WORLD,&status);
     end = MPI_Wtime();
 
-    printf("%f seconds over %d items\n",end-start, size);
+    printf("%f, %d\n",end-start, size);
   }
   else if(taskid == RECEIVER){
     MPI_Status status;
