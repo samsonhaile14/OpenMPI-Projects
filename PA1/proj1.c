@@ -30,7 +30,7 @@ for(size = 1; size < max;size += interval){
   if(taskid == MASTER){
     double start,end;
     MPI_Status status;
-    int msgtag;
+    int msgtag = 10;
 
     start = MPI_Wtime();
     MPI_Send(val, size, MPI_INT, RECEIVER, msgtag,MPI_COMM_WORLD);
@@ -42,7 +42,7 @@ for(size = 1; size < max;size += interval){
   }
   else if(taskid == RECEIVER){
     MPI_Status status;
-    int msgtag;
+    int msgtag = 10;
 
     MPI_Recv(val, size, MPI_INT, MASTER, msgtag,MPI_COMM_WORLD,&status);
     MPI_Send(val, size, MPI_INT, MASTER, msgtag,MPI_COMM_WORLD);
