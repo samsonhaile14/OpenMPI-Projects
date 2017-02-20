@@ -17,7 +17,7 @@ MPI_Get_processor_name(hostname, &len);
 
 int size;
 int max = 10000000;
-int interval = 1;
+int interval = 100;
 
 int* val = malloc(sizeof(int) * max);
 
