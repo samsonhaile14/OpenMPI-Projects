@@ -17,7 +17,7 @@ MPI_Comm_rank(MPI_COMM_WORLD,&taskid);
 MPI_Get_processor_name(hostname, &len);
 
 int size;
-int max = 10000;
+int max = atoi(argv[1]);
 int interval = 1;
 
 int* val = malloc(sizeof(int) * max);
