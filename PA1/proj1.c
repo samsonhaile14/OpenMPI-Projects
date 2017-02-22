@@ -9,9 +9,8 @@ int main(int argc, char *argv[])
 {
 int numtasks, taskid,len;
 char hostname[MPI_MAX_PROCESSOR_NAME];
-printf("%d", argc);
+
 MPI_Init(&argc, &argv);
-printf("%d", argc);
 MPI_Comm_size(MPI_COMM_WORLD,&numtasks);
 MPI_Comm_rank(MPI_COMM_WORLD,&taskid);
 MPI_Get_processor_name(hostname, &len);
@@ -22,7 +21,7 @@ int interval = 1;
 
 int* val = malloc(sizeof(int) * max);
 
-for(size = 1; size < max;size += interval){
+for(size = 1; size <= max;size += interval){
   if(taskid == MASTER){
     double start,end;
     MPI_Status status;
