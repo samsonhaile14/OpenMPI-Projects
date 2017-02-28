@@ -1,0 +1,4 @@
+srun: error: compute-0-0: task 0: Exited with exit code 2
+slurmstepd: execve(): proj1: No such file or directory
+slurmstepd: execve(): proj1: No such file or directory
+srun: error: compute-0-1: task 1: Exited with exit code 2
