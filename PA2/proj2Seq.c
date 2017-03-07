@@ -45,6 +45,8 @@ int main(int argc, char *argv[])
 	unsigned char **image;
 
 	//initialization
+	MPI_Init(&argc, &argv);
+
 	disp_width = 480;
 	disp_height = 640;
 	real_min = -2;
