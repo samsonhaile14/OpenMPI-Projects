@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "mpi.h"
+//#include "mpi.h"
 
 #ifdef _WIN32
   #define WRITE_FLAGS "wb"
@@ -45,10 +45,10 @@ int main(int argc, char *argv[])
 	unsigned char **image;
 
 	//initialization
-	MPI_Init(&argc, &argv);
+	//MPI_Init(&argc, &argv);	//only used for timer
 
-	disp_width = 480;
-	disp_height = 640;
+	disp_width = 10000;
+	disp_height = 10000;
 	real_min = -2;
 	real_max = 2;
 	imag_min = -2;
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 	}
 
 	//start timer
-	double start = MPI_Wtime();
+	//double start = MPI_Wtime();
 
 	//compute image
 	for(x = 0; x < disp_width; x++){
@@ -77,10 +77,10 @@ int main(int argc, char *argv[])
 	}
 
 	//end timer
-	double end = MPI_Wtime();
+	//double end = MPI_Wtime();
 
 	//calculate elapsed time and output
-	printf("%f\n", end - start);
+	//printf("%f\n", end - start);
 
 	//write image to file
 	pim_write_black_and_white("mandelbrotImg", disp_height, 
@@ -92,6 +92,8 @@ int main(int argc, char *argv[])
 	}
 
 	free(image);
+
+	//MPI_Finalize();
 
 
 }
