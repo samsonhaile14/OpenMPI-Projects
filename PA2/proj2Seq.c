@@ -1,15 +1,16 @@
+//Sequential mandelbrot program
+// by Samson Haile
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//#include "mpi.h"
+#include "mpi.h"
 
 #ifdef _WIN32
   #define WRITE_FLAGS "wb"
 #else
   #define WRITE_FLAGS "w"
 #endif
-#define MASTER  0
-#define RECEIVER 1
 
 typedef struct complex{
 
@@ -20,21 +21,25 @@ typedef struct complex{
 
 //function specifications
 
-/*outputs line of pixels to file*/
-int pim_write_black_and_white_line(const char * const fileName,
-                               const int width,
-                               const int height,
-                               unsigned char * pixels);
+	/*outputs line of pixels to file
+	  note: code was supplied by instructor and modified */
+	int pim_write_black_and_white_line(const char * const fileName,
+		                       const int width,
+		                       const int height,
+		                       unsigned char * pixels);
 
-/*outputs pixel image to file*/
-int pim_write_black_and_white(const char * const fileName,
-                               const int width,
-                               const int height,
-                               unsigned char ** pixels);
+	/*outputs pixel image to file
+	  note: code was supplied by instructor and modified */
+	int pim_write_black_and_white(const char * const fileName,
+		                       const int width,
+		                       const int height,
+		                       unsigned char ** pixels);
 
-/*calculates mandelbrot set value of complex number*/
-int cal_pixel(complex c);
+	/*calculates mandelbrot set value of complex number
+	  note: code for function was taken from parallel textbook */
+	int cal_pixel(complex c);
 
+//main program
 int main(int argc, char *argv[])
 {
 
@@ -45,7 +50,7 @@ int main(int argc, char *argv[])
 	unsigned char **image;
 
 	//initialization
-	//MPI_Init(&argc, &argv);	//only used for timer
+	MPI_Init(&argc, &argv);	//only used for timer
 
 	disp_width = 10000;
 	disp_height = 10000;
@@ -63,9 +68,10 @@ int main(int argc, char *argv[])
 	}
 
 	//start timer
-	//double start = MPI_Wtime();
+	double start = MPI_Wtime();
 
 	//compute image
+	//note: code was taken from textbook and modified
 	for(x = 0; x < disp_width; x++){
 		for( y = 0; y < disp_height; y++ ){
 			complex c;
@@ -77,23 +83,23 @@ int main(int argc, char *argv[])
 	}
 
 	//end timer
-	//double end = MPI_Wtime();
+	double end = MPI_Wtime();
 
 	//calculate elapsed time and output
-	//printf("%f\n", end - start);
+	printf("%f\n", end - start);
 
 	//write image to file
 	pim_write_black_and_white("mandelbrotImg", disp_height, 
 				  disp_width,image);
 
-	//free memory
+	//free memory and terminate
 	for( x = 0; x < disp_width; x++ ){
 		free(image[x]);
 	}
 
 	free(image);
 
-	//MPI_Finalize();
+	MPI_Finalize();
 
 
 }
