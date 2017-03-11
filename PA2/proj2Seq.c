@@ -52,8 +52,10 @@ int main(int argc, char *argv[])
 	//initialization
 	MPI_Init(&argc, &argv);	//only used for timer
 
-	disp_width = 10000;
-	disp_height = 10000;
+	max_width = 10000
+	max_height = 10000;
+	disp_width = 500;
+	disp_height = 500;
 	real_min = -2;
 	real_max = 2;
 	imag_min = -2;
@@ -61,36 +63,41 @@ int main(int argc, char *argv[])
 	scale_real = (real_max - real_min)/((double)disp_width);
 	scale_imag = (imag_max - imag_min)/((double)disp_height);
 
-	image = malloc( sizeof(unsigned char *) * disp_width );
+	image = malloc( sizeof(unsigned char *) * max_width );
 
-	for( x = 0; x < disp_width; x++ ){
-		image[x] = malloc( sizeof( unsigned char) * disp_height );
+	for( x = 0; x < max_width; x++ ){
+		image[x] = malloc( sizeof( unsigned char) * max_height );
 	}
-
-	//start timer
-	double start = MPI_Wtime();
 
 	//compute image
 	//note: code was taken from textbook and modified
-	for(x = 0; x < disp_width; x++){
-		for( y = 0; y < disp_height; y++ ){
-			complex c;
-			c.real = real_min + ((double) x * scale_real );
-			c.imag = imag_min + ((double) y * scale_imag );
-			image[x][y] = cal_pixel(c);//calculate pixel
-						   //and store in buffer
+	for(disp_width = 500; disp_width <= max_width; disp_width ++){
+		disp_height = disp_width;
+
+		//start timer
+		double start = MPI_Wtime();
+
+		for(x = 0; x < disp_width; x++){
+			for( y = 0; y < disp_height; y++ ){
+				complex c;
+				c.real = real_min + ((double) x * scale_real );
+				c.imag = imag_min + ((double) y * scale_imag );
+				image[x][y] = cal_pixel(c);//calculate pixel
+							   //and store in buffer
+			}
 		}
-	}
 
 	//end timer
 	double end = MPI_Wtime();
 
 	//calculate elapsed time and output
-	printf("%f\n", end - start);
+	printf("%d, %f\n", disp_width, end - start);
 
-	//write image to file
-	pim_write_black_and_white("mandelbrotImg", disp_height, 
-				  disp_width,image);
+	//write image to file (uncomment following two lines if image is desired)
+	//pim_write_black_and_white("mandelbrotImg", disp_height, 
+	//			  disp_width,image);
+
+	}
 
 	//free memory and terminate
 	for( x = 0; x < disp_width; x++ ){
@@ -100,7 +107,6 @@ int main(int argc, char *argv[])
 	free(image);
 
 	MPI_Finalize();
-
 
 }
 
