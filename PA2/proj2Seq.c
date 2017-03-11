@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 	//initialization
 	MPI_Init(&argc, &argv);	//only used for timer
 
-	max_width = 10000
+	max_width = 10000;
 	max_height = 10000;
 	disp_width = 500;
 	disp_height = 500;
