@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 {
 
 	//variables
-	int x,y,disp_width,disp_height;
+	int x,y, max_width, max_height,disp_width,disp_height;
 	double real_min, real_max, imag_min, imag_max;
 	double scale_real, scale_imag;
 	unsigned char **image;
