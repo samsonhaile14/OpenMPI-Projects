@@ -52,10 +52,7 @@ int main(int argc, char *argv[])
 	//initialization
 	MPI_Init(&argc, &argv);	//only used for timer
 
-	max_width = 10000;
-	max_height = 10000;
-	disp_width = 500;
-	disp_height = 500;
+	max_width = max_height = 10000;
 	real_min = -2;
 	real_max = 2;
 	imag_min = -2;
@@ -78,7 +75,6 @@ int main(int argc, char *argv[])
 		scale_real = (real_max - real_min)/((double)disp_width);
 		scale_imag = (imag_max - imag_min)/((double)disp_height);
 
-
 		for(x = 0; x < disp_width; x++){
 			for( y = 0; y < disp_height; y++ ){
 				complex c;
@@ -99,8 +95,8 @@ int main(int argc, char *argv[])
 
 	//write image to file (uncomment following two lines if image is desired)
 	//largest sized image (10000x10000) will be displayed
-	pim_write_black_and_white("mandelbrotImg", disp_height, 
-				  disp_width,image);
+	pim_write_black_and_white("mandelbrotImg", max_height, 
+				  max_width,image);
 
 	//free memory and terminate
 	for( x = 0; x < disp_width; x++ ){
