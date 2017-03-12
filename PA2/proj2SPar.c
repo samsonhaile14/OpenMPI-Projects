@@ -61,8 +61,7 @@ int main(int argc, char *argv[])
 	double scale_real, scale_imag;
 	MPI_Status status;
 
-	max_width = 10000;
-	max_height = 10000;
+	max_width = max_height = 10000;
 	disp_width = 500;
 	disp_height = 500;
 	real_min = -2;
@@ -83,7 +82,7 @@ int main(int argc, char *argv[])
 
 		for( x = 0; x < numtasks; x++ ){
 			taskComplete[x] = 0;
-			range = malloc( sizeof( int ) * 2);
+			range[x] = malloc( sizeof( int ) * 2);
 		}
 
 		for( x = 0; x < max_width; x++ ){
