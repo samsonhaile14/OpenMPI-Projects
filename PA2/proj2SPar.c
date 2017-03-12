@@ -196,7 +196,6 @@ int main(int argc, char *argv[])
 			MPI_Recv( range, 2, MPI_INT, 0, msgtag,MPI_COMM_WORLD,&status );
 
 			//Calculate pixels
-/*
 			for( x = range[0]; x <= range[1]; x++ ){
 				complex c;
 				int colX = x / disp_width;
@@ -205,22 +204,7 @@ int main(int argc, char *argv[])
 				c.real = real_min + ((double) colX * scale_real );
 				c.imag = imag_min + ((double) colY * scale_imag );				
 				buffer[x - range[0]] = cal_pixel(c);
-				printf( "%u\n", buffer[x - range[0]] );
 			}
-*/
-		for(x = 0; x < disp_width; x++){
-			for( y = 0; y < disp_height; y++ ){
-				complex c;
-				c.real = real_min + ((double) x * scale_real );
-				c.imag = imag_min + ((double) y * scale_imag );
-				printf("%f, %f\n", c.real,c.imag);
-				buffer[y + x * disp_height] = cal_pixel(c);//calculate pixel
-							   //and store in buffer
-				//printf( "%d\n", cal_pixel(c) );
-			}
-		}
-
-			printf("%d %d\n", range[0], range[1] );
 
 			//Send results back to master
 			MPI_Send( buffer, range[1]-range[0] + 1, MPI_UNSIGNED_CHAR, 0, 
