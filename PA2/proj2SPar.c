@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
 		}
 
 		//distribute and receive work
-		for(disp_width = 500; disp_width <= max_width; disp_width ++){
+		for(disp_width = 500; disp_width <= 500; disp_width ++){
 			disp_height = disp_width;
 
 			//start timer
@@ -156,10 +156,11 @@ int main(int argc, char *argv[])
 			printf("%d, %f\n", disp_width, end - start);
 
 			//write image to file (uncomment following two lines if image is desired)
-			//if( disp_width == max_width ){	//limit image produced to one
-			//pim_write_black_and_white("mandelbrotImg", disp_height, 
-			//			  disp_width,image);
-			//}
+			//smallest sized image (500x500) will be displayed
+			if(disp_width == 500){
+			pim_write_black_and_white("mandelbrotImg", disp_height, 
+						  disp_width,image);
+			}
 
 			//deallocate for iteration
 			free(buffer);
@@ -185,7 +186,7 @@ int main(int argc, char *argv[])
 
 		//receive coordinate range and compute image
 		//note: code was taken from textbook and modified
-		for(disp_width = 500; disp_width <= max_width; disp_width ++){
+		for(disp_width = 500; disp_width <= 500; disp_width ++){
 			disp_height = disp_width;
 
 			scale_real = (real_max - real_min)/((double)disp_width);
