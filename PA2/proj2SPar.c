@@ -215,7 +215,7 @@ int main(int argc, char *argv[])
 				c.imag = imag_min + ((double) y * scale_imag );
 				buffer[y + x * disp_height] = cal_pixel(c);//calculate pixel
 							   //and store in buffer
-				printf( "%u\n", buffer[y+ x * disp_height] );
+				printf( "%d\n", cal_pixel(c) );
 			}
 		}
 
