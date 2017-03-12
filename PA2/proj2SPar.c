@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 	double scale_real, scale_imag;
 	MPI_Status status;
 
-	max_width = max_height = 1000;
+	max_width = max_height = 1500;
 	disp_width = 500;
 	disp_height = 500;
 	real_min = -2;
