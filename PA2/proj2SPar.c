@@ -198,8 +198,8 @@ int main(int argc, char *argv[])
 			//Calculate pixels
 			for( x = range[0]; x <= range[1]; x++ ){
 				complex c;
-				c.real = real_min + ((double) x * scale_real );
-				c.imag = imag_min + ((double) y * scale_imag );				
+				c.real = real_min + ((double) (x%disp_width) * scale_real );
+				c.imag = imag_min + ((double) (x/disp_width) * scale_imag );				
 				buffer[x - range[0]] = cal_pixel(c);
 			}
 
