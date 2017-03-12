@@ -201,7 +201,7 @@ int main(int argc, char *argv[])
 				c.real = real_min + ((double) (x%disp_width) * scale_real );
 				c.imag = imag_min + ((double) (x/disp_width) * scale_imag );				
 				buffer[x - range[0]] = cal_pixel(c);
-				printf( "%d\n", buffer[x - range[0] );
+				printf( "%d\n", buffer[x - range[0]] );
 			}
 
 			printf("%d %d\n", range[0], range[1] );
