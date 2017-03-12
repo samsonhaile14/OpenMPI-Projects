@@ -198,8 +198,11 @@ int main(int argc, char *argv[])
 			//Calculate pixels
 			for( x = range[0]; x <= range[1]; x++ ){
 				complex c;
-				c.real = real_min + ((double) (x%disp_width) * scale_real );
-				c.imag = imag_min + ((double) (x/disp_width) * scale_imag );				
+				int colX = x / disp_width;
+				int colY = x % disp_width;
+
+				c.real = real_min + ((double) colX * scale_real );
+				c.imag = imag_min + ((double) colY * scale_imag );				
 				buffer[x - range[0]] = cal_pixel(c);
 				printf( "%u\n", buffer[x - range[0]] );
 			}
