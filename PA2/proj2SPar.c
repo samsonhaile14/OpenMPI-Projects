@@ -59,6 +59,7 @@ int main(int argc, char *argv[])
 	int x,y, max_width, max_height,disp_width,disp_height;
 	double real_min, real_max, imag_min, imag_max;
 	double scale_real, scale_imag;
+	MPI_Status status;
 
 	max_width = 10000;
 	max_height = 10000;
@@ -193,7 +194,7 @@ int main(int argc, char *argv[])
 			scale_imag = (imag_max - imag_min)/((double)disp_height);
 
 			//Receive work range
-			MPI_Recv( range, 2, MPI_INT, 0, msgtag,MPI_COMM_WORLD,&status )
+			MPI_Recv( range, 2, MPI_INT, 0, msgtag,MPI_COMM_WORLD,&status );
 
 			//Calculate pixels
 			for( x = range[0]; x <= range[1]; x++ ){
