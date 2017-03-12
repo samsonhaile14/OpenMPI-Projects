@@ -206,7 +206,7 @@ int main(int argc, char *argv[])
 
 			//Send results back to master
 			MPI_Send( buffer, range[1]-range[0] + 1, MPI_INT, 0, 
-					  msgtag, MPI_COMM_WORLD,&status);
+					  msgtag, MPI_COMM_WORLD);
 		}
 		free (buffer);
 	}
