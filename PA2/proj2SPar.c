@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
 
 			scale_real = (real_max - real_min)/((double)disp_width);
 			scale_imag = (imag_max - imag_min)/((double)disp_height);
-printf( "%f %f %f %f %f %f\n", real_max, real_min,imag_max,imag_min, scale_real,scale_imag);
+
 			//Receive work range
 			MPI_Recv( range, 2, MPI_INT, 0, msgtag,MPI_COMM_WORLD,&status );
 
@@ -213,6 +213,7 @@ printf( "%f %f %f %f %f %f\n", real_max, real_min,imag_max,imag_min, scale_real,
 				complex c;
 				c.real = real_min + ((double) x * scale_real );
 				c.imag = imag_min + ((double) y * scale_imag );
+				printf("%f, %f\n", c.real,c.imag);
 				buffer[y + x * disp_height] = cal_pixel(c);//calculate pixel
 							   //and store in buffer
 				//printf( "%d\n", cal_pixel(c) );
