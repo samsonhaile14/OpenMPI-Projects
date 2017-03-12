@@ -91,12 +91,13 @@ int main(int argc, char *argv[])
 	//calculate elapsed time and output
 	printf("%d, %f\n", disp_width, end - start);
 
-	}
-
 	//write image to file (uncomment following two lines if image is desired)
-	//largest sized image (10000x10000) will be displayed
-	pim_write_black_and_white("mandelbrotImg", max_height, 
-				  max_width,image);
+	//smallest sized image (500x500) will be displayed
+	//if(disp_width == 500)
+	//pim_write_black_and_white("mandelbrotImg", disp_height, 
+	//			  disp_width,image);
+	//}
+	}
 
 	//free memory and terminate
 	for( x = 0; x < disp_width; x++ ){
