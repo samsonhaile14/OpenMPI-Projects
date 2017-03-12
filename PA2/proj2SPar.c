@@ -111,9 +111,9 @@ int main(int argc, char *argv[])
 
 			//wait for work back from processes
 			int finished = 1;
-			int* buffer;
+			unsigned char* buffer;
 
-			buffer = malloc( sizeof(int) * ((maxPos) / (numtasks - 1)) + 2);
+			buffer = malloc( sizeof(unsigned char) * ((maxPos) / (numtasks - 1)) + 2);
 
 			do{
 
@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
 					//if so, collect data from process
 					if(curComplete){
 						MPI_Recv( buffer, (range[x][1] - range[x][0] + 1), 
-									 MPI_INT, x, msgtag, MPI_COMM_WORLD, &status);
+									 MPI_UNSIGNED_CHAR, x, msgtag, MPI_COMM_WORLD, &status);
 						for( y = range[x][0]; y <= range[x][1]; y++ ){
 							image[y / disp_width][y %disp_width] = buffer[ y - range[x][0]];
 						}
@@ -180,9 +180,9 @@ int main(int argc, char *argv[])
 		//variables and allocation
 		int range[2];
 		int maxPos = (max_width * max_width)-1;
-		int *buffer;
+		unsigned char *buffer;
 
-		buffer = malloc( sizeof(int) * ((maxPos) / (numtasks - 1)) + 2);
+		buffer = malloc( sizeof(unsigned char) * ((maxPos) / (numtasks - 1)) + 2);
 
 		//receive coordinate range and compute image
 		//note: code was taken from textbook and modified
@@ -201,13 +201,13 @@ int main(int argc, char *argv[])
 				c.real = real_min + ((double) (x%disp_width) * scale_real );
 				c.imag = imag_min + ((double) (x/disp_width) * scale_imag );				
 				buffer[x - range[0]] = cal_pixel(c);
-				printf( "%d\n", buffer[x - range[0]] );
+				printf( "%u\n", buffer[x - range[0]] );
 			}
 
 			printf("%d %d\n", range[0], range[1] );
 
 			//Send results back to master
-			MPI_Send( buffer, range[1]-range[0] + 1, MPI_INT, 0, 
+			MPI_Send( buffer, range[1]-range[0] + 1, MPI_UNSIGNED_CHAR, 0, 
 					  msgtag, MPI_COMM_WORLD);
 		}
 		free (buffer);
