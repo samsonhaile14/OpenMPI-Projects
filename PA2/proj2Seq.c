@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
 
 	//write image to file (uncomment following two lines if image is desired)
 	//smallest sized image (500x500) will be displayed
-	//if(disp_width == 500)
+	//if(disp_width == 500){
 	//pim_write_black_and_white("mandelbrotImg", disp_height, 
 	//			  disp_width,image);
 	//}
