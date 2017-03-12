@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
 
 					//if so, collect data from process
 					if(curComplete){
-						MPI_Receive( buffer, (range[x][1] - range[x][0] + 1), 
+						MPI_Recv( buffer, (range[x][1] - range[x][0] + 1), 
 									 MPI_INT, x, msgtag, MPI_COMM_WORLD, &status);
 						for( y = range[x][0]; y <= range[x][1]; y++ ){
 							image[y / disp_width][y %disp_width] = buffer[ y - range[x][0]];
