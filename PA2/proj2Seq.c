@@ -60,8 +60,6 @@ int main(int argc, char *argv[])
 	real_max = 2;
 	imag_min = -2;
 	imag_max = 2;
-	scale_real = (real_max - real_min)/((double)disp_width);
-	scale_imag = (imag_max - imag_min)/((double)disp_height);
 
 	image = malloc( sizeof(unsigned char *) * max_width );
 
@@ -76,6 +74,10 @@ int main(int argc, char *argv[])
 
 		//start timer
 		double start = MPI_Wtime();
+
+		scale_real = (real_max - real_min)/((double)disp_width);
+		scale_imag = (imag_max - imag_min)/((double)disp_height);
+
 
 		for(x = 0; x < disp_width; x++){
 			for( y = 0; y < disp_height; y++ ){
@@ -94,8 +96,9 @@ int main(int argc, char *argv[])
 	printf("%d, %f\n", disp_width, end - start);
 
 	//write image to file (uncomment following two lines if image is desired)
-	//pim_write_black_and_white("mandelbrotImg", disp_height, 
-	//			  disp_width,image);
+	//largest sized image (10000x10000) will be displayed
+	pim_write_black_and_white("mandelbrotImg", disp_height, 
+				  disp_width,image);
 
 	}
 
