@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 	MPI_Get_processor_name(hostname, &len);
 
 	//Master and slave process variables
-	int x,y, max_width, max_height,disp_width,disp_height;
+	long long int x,y, max_width, max_height,disp_width,disp_height;
 	double real_min, real_max, imag_min, imag_max;
 	double scale_real, scale_imag;
 	MPI_Status status;
@@ -73,16 +73,16 @@ int main(int argc, char *argv[])
 	if( taskid == MASTER){
 		//variables and allocation
 		int *taskComplete;
-		int **range;
+		long long int **range;
 		unsigned char **image;
 
 		image = malloc( sizeof(unsigned char *) * max_width );
 		taskComplete = malloc( sizeof(int) * numtasks );
-		range = malloc( sizeof(int *) * numtasks );
+		range = malloc( sizeof(long long int *) * numtasks );
 
 		for( x = 0; x < numtasks; x++ ){
 			taskComplete[x] = 0;
-			range[x] = malloc( sizeof( int ) * 2);
+			range[x] = malloc( sizeof( long long int ) * 2);
 		}
 
 		for( x = 0; x < max_width; x++ ){
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
 			double start = MPI_Wtime();
 
 			//assign work to processes
-			int maxPos = (disp_width * disp_width)-1;
+			long long int maxPos = (disp_width * disp_width)-1;
 
 			range[0][0] = range[0][1] = -1;
 			for( x = 1; x < numtasks; x++ ){
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
 				if( range[x][1] > maxPos ){
 					range[x][1] = maxPos;
 				}
-				MPI_Send(range[x], 2, MPI_INT, x, msgtag,MPI_COMM_WORLD);
+				MPI_Send(range[x], 2, MPI_LONG_LONG_INT, x, msgtag,MPI_COMM_WORLD);
 			}
 
 			//wait for work back from processes
@@ -162,6 +162,11 @@ int main(int argc, char *argv[])
 			//			  disp_width,image);
 			//}
 
+			//reset array for next iteration
+			for( x = 0; x < numtasks; x++ ){
+				taskComplete[x] = 0;
+			}
+
 			//deallocate for iteration
 			free(buffer);
 
@@ -178,8 +183,8 @@ int main(int argc, char *argv[])
 
 	if(taskid != MASTER){
 		//variables and allocation
-		int range[2];
-		int maxPos = (max_width * max_width)-1;
+		long long int range[2];
+		long long int maxPos = (max_width * max_width)-1;
 		unsigned char *buffer;
 
 		buffer = malloc( sizeof(unsigned char) * ((maxPos) / (numtasks - 1)) + 2);
@@ -193,7 +198,7 @@ int main(int argc, char *argv[])
 			scale_imag = (imag_max - imag_min)/((double)disp_height);
 
 			//Receive work range
-			MPI_Recv( range, 2, MPI_INT, 0, msgtag,MPI_COMM_WORLD,&status );
+			MPI_Recv( range, 2, MPI_LONG_LONG_INT, 0, msgtag,MPI_COMM_WORLD,&status );
 
 			//Calculate pixels
 			for( x = range[0]; x <= range[1]; x++ ){
