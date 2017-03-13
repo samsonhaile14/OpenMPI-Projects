@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
 			double end = MPI_Wtime();
 
 			//calculate elapsed time and output
-			printf("%d,%d, %f\n", numTasks,disp_width, end - start);
+			printf("%d,%d, %f\n", numtasks,disp_width, end - start);
 
 			//write image to file (uncomment following two lines if image is desired)
 			//smallest sized image (500x500) will be displayed
