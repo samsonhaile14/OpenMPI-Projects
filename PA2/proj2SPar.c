@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
 			int finished = 1;
 			unsigned char* buffer;
 
-			buffer = malloc( sizeof(unsigned char) * ((maxPos) / (numtasks - 1)) + 2);
+			buffer = malloc( sizeof(unsigned char) * (((maxPos) / (numtasks - 1)) + 2));
 
 			do{
 
@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
 		int maxPos = (max_width * max_width)-1;
 		unsigned char *buffer;
 
-		buffer = malloc( sizeof(unsigned char) * ((maxPos) / (numtasks - 1)) + 2);
+		buffer = malloc( sizeof(unsigned char) * (((maxPos) / (numtasks - 1)) + 2));
 
 		//receive coordinate range and compute image
 		//note: code was taken from textbook and modified
