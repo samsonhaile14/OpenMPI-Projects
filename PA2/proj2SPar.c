@@ -173,10 +173,15 @@ int main(int argc, char *argv[])
 		}
 
 		//free memory and terminate
+		for( x = 0; x < numtasks; x++){
+			free(range[x]);
+		}
+
 		for( x = 0; x < disp_width; x++ ){
 			free(image[x]);
 		}
 
+		free(range);
 		free(image);
 		free(taskComplete);
 	}
