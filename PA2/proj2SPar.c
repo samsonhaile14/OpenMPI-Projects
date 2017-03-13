@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
 
 					//check if process has completed task
 					if(!taskComplete[x]){
-						curComplete = MPI_Probe( x, msgtag, MPI_COMM_WORLD, &status );
+						MPI_Iprobe( x, msgtag, MPI_COMM_WORLD, &curComplete, &status );
 					}
 
 					//if so, collect data from process
