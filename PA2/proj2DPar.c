@@ -1,4 +1,4 @@
-//Static Parallel mandelbrot program
+//dynamic parallel mandelbrot program
 // by Samson Haile
 
 #include <stdio.h>
@@ -101,8 +101,9 @@ int main(int argc, char *argv[])
 
 			range[0][0] = range[0][1] = -1;
 			for( x = 1; x < numtasks; x++ ){
+				/*dynamic change: range interval is the size of the row*/
 				range[x][0] = range[x-1][1] + 1;
-				range[x][1] = range[x][0] + ((maxPos) / (numtasks - 1)) + 1;
+				range[x][1] = range[x][0] + disp_width - 1;
 				if( range[x][1] > maxPos ){
 					range[x][1] = maxPos;
 				}
@@ -110,44 +111,53 @@ int main(int argc, char *argv[])
 			}
 
 			//wait for work back from processes
-			int finished = 1;
+			int rowsComplete = 0, rowIndex = (numtasks - 1);
 			unsigned char* buffer;
 
-			buffer = malloc( sizeof(unsigned char) * (((maxPos) / (numtasks - 1)) + 2));
+			buffer = malloc( sizeof(unsigned char) * disp_width);
 
 			do{
-
-				//assume all processes are finished until shown otherwise
-				finished = 1;
 
 				//check for work from other processes
 				for( x = 1; x < numtasks; x++ ){
 					int curComplete = 0;
 
 					//check if process has completed task
-					if(!taskComplete[x]){
-						MPI_Iprobe( x, msgtag, MPI_COMM_WORLD, &curComplete, &status );
-					}
+					MPI_Iprobe( x, msgtag, MPI_COMM_WORLD, &curComplete, &status );
 
-					//if so, collect data from process
+					//if so, collect data from process and assign next task
 					if(curComplete){
+						//receive and store results
 						MPI_Recv( buffer, (range[x][1] - range[x][0] + 1), 
 									 MPI_UNSIGNED_CHAR, x, msgtag, MPI_COMM_WORLD, &status);
+
 						for( y = range[x][0]; y <= range[x][1]; y++ ){
 							image[y / disp_width][y %disp_width] = buffer[ y - range[x][0]];
 						}
 						
-						taskComplete[x] = 1;
+						//raise number of complete rows
+						rowsComplete++;
+
+						//if no more rows of work remain, send code to stop work
+						if(rowIndex >= disp_height){
+							range[x][0] = range[x][1] = -1;
+						}
+
+						//else, send next row of work
+						else{
+							range[x][0] = disp_width * rowIndex;
+							range[x][1] = range[x][0] + disp_width - 1;
+							rowIndex++;
+						}
+
+						//send next set of range information
+						MPI_Send(range[x], 2, MPI_INT, x, msgtag,MPI_COMM_WORLD);
+
 					}
 
-					/*if a task hasn't been completed now or in the 
-					past, check all processes again on next iteration */
-					else if(!taskComplete[x]){
-						finished = 0;
-					}
 				}
 
-			}while(!finished);
+			}while(rowsComplete < disp_height);
 
 			//end timer
 			double end = MPI_Wtime();
@@ -189,10 +199,9 @@ int main(int argc, char *argv[])
 	if(taskid != MASTER){
 		//variables and allocation
 		int range[2];
-		int maxPos = (max_width * max_width)-1;
 		unsigned char *buffer;
 
-		buffer = malloc( sizeof(unsigned char) * (((maxPos) / (numtasks - 1)) + 2));
+		buffer = malloc( sizeof(unsigned char) * max_width);
 
 		//receive coordinate range and compute image
 		//note: code was taken from textbook and modified
@@ -202,23 +211,31 @@ int main(int argc, char *argv[])
 			scale_real = (real_max - real_min)/((double)disp_width);
 			scale_imag = (imag_max - imag_min)/((double)disp_height);
 
-			//Receive work range
+			//Receive first work range
 			MPI_Recv( range, 2, MPI_INT, 0, msgtag,MPI_COMM_WORLD,&status );
 
-			//Calculate pixels
-			for( x = range[0]; x <= range[1]; x++ ){
-				complex c;
-				int colX = x / disp_width;
-				int colY = x % disp_width;
+			//continue working on image till master has no more work
+			while( (range[0] != -1) && (range[1] != -1))
 
-				c.real = real_min + ((double) colX * scale_real );
-				c.imag = imag_min + ((double) colY * scale_imag );				
-				buffer[x - range[0]] = cal_pixel(c);
+				//Calculate pixels
+				for( x = range[0]; x <= range[1]; x++ ){
+					complex c;
+					int colX = x / disp_width;
+					int colY = x % disp_width;
+
+					c.real = real_min + ((double) colX * scale_real );
+					c.imag = imag_min + ((double) colY * scale_imag );				
+					buffer[x - range[0]] = cal_pixel(c);
+				}
+
+				//Send results back to master
+				MPI_Send( buffer, range[1]-range[0] + 1, MPI_UNSIGNED_CHAR, 0, 
+						  msgtag, MPI_COMM_WORLD);
+
+				//Receive next work range
+				MPI_Recv( range, 2, MPI_INT, 0, msgtag,MPI_COMM_WORLD,&status );
+
 			}
-
-			//Send results back to master
-			MPI_Send( buffer, range[1]-range[0] + 1, MPI_UNSIGNED_CHAR, 0, 
-					  msgtag, MPI_COMM_WORLD);
 		}
 		free (buffer);
 	}
