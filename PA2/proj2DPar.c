@@ -215,7 +215,7 @@ int main(int argc, char *argv[])
 			MPI_Recv( range, 2, MPI_INT, 0, msgtag,MPI_COMM_WORLD,&status );
 
 			//continue working on image till master has no more work
-			while( (range[0] != -1) && (range[1] != -1))
+			while( (range[0] != -1) && (range[1] != -1)){
 
 				//Calculate pixels
 				for( x = range[0]; x <= range[1]; x++ ){
