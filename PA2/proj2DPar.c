@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 	double scale_real, scale_imag;
 	MPI_Status status;
 
-	max_width = max_height = 1500;
+	max_width = max_height = 20000;
 	disp_width = 500;
 	disp_height = 500;
 	real_min = -2;
@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
 		}
 
 		//distribute and receive work
-		for(disp_width = 500; disp_width <= max_width; disp_width ++){
+		for(disp_width = 500; disp_width <= max_width; disp_width += 500){
 			disp_height = disp_width;
 
 			//start timer
@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
 			free(range[x]);
 		}
 
-		for( x = 0; x < disp_width; x++ ){
+		for( x = 0; x < max_width; x++ ){
 			free(image[x]);
 		}
 
@@ -205,7 +205,7 @@ int main(int argc, char *argv[])
 
 		//receive coordinate range and compute image
 		//note: code was taken from textbook and modified
-		for(disp_width = 500; disp_width <= max_width; disp_width ++){
+		for(disp_width = 500; disp_width <= max_width; disp_width += 500){
 			disp_height = disp_width;
 
 			scale_real = (real_max - real_min)/((double)disp_width);
