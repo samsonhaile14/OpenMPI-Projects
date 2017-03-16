@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 	//initialization
 	MPI_Init(&argc, &argv);	//only used for timer
 
-	max_width = max_height = 1500;
+	max_width = max_height = 30000;
 	real_min = -2;
 	real_max = 2;
 	imag_min = -2;
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 
 	//compute image
 	//note: code was taken from textbook and modified
-	for(disp_width = 500; disp_width <= max_width; disp_width ++){
+	for(disp_width = 500; disp_width <= max_width; disp_width += 500){
 		disp_height = disp_width;
 
 		//start timer
