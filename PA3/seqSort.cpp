@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
+#include <fstream>
 #include "mpi.h"
 
 using namespace std;
@@ -46,7 +47,7 @@ int main(int argc, char *argv[])
 		vector<int> result(data.size(),0 );
 
 	//Sort across different sizes
-	for(act_size = 500; act_size < data.size(); disp_width += 500){
+	for(act_size = 500; act_size < data.size(); act_size += 500){
 		vector<int> buckets[100];
 		int max = -1;
 
