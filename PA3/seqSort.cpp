@@ -10,12 +10,12 @@
 using namespace std;
 
 //function specifications
-void insertionSort( vector<int> dSet );
+void insertionSort( vector<int> &dSet );
 
 //main program
 int main(int argc, char *argv[])
 {
-
+  
 	//variables
 		int act_size,temp;
 		int index;
@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 
 		//initialization
 		MPI_Init(&argc, &argv);	//only used for timer
-
+	       
 	//Read data from file
 		ifstream fin;
 
@@ -42,13 +42,14 @@ int main(int argc, char *argv[])
 		}
 
 		fin.close();
-
+		
 	//designate array for sorted results
 		vector<int> result(data.size(),0 );
-
+		
 	//Sort across different sizes
-	for(act_size = 500; act_size < data.size(); act_size += 500){
+	for(act_size = 10000; act_size < data.size(); act_size += 10000){
 		vector<int> buckets[100];
+
 		int max = -1;
 
 		//start timer
@@ -63,19 +64,23 @@ int main(int argc, char *argv[])
 
 		//organize data into respective buckets
 		for(index = 0; index < act_size;index++){
-			buckets[ data[index] / (max / 100) ].push_back(data[index]);
+		  temp = data[index] / (max / 100);
+		  if( temp >= 100 ){
+		    temp = 99;
+		  }
+		  buckets[ temp ].push_back(data[index]);
 		}
 
 		//sort each bucket
 		for(index = 0; index < 100; index++){
-			insertionSort( buckets[index] );
+		  insertionSort( buckets[index] );
 		}
 
 		//place into result array
 		int curs = 0, bIndex;
 		for(index = 0; index < 100; index++){
 			for(bIndex = 0; bIndex < buckets[index].size(); bIndex++,curs++){
-				result[curs] = buckets[index][bIndex];
+				result[curs] = buckets[index][bIndex];			        
 			}
 		}
 
@@ -83,7 +88,7 @@ int main(int argc, char *argv[])
 			double end = MPI_Wtime();
 
 		//calculate elapsed time and output
-			printf("%d, %f\n", act_size, end - start);
+      			printf("%d, %f\n", act_size, end - start);
 
 	}
 
@@ -93,7 +98,7 @@ int main(int argc, char *argv[])
 }
 
 
-void insertionSort( vector<int> dSet ){
+void insertionSort( vector<int> &dSet ){
 
 	int curs = 0,index;
 	int temp;
@@ -104,12 +109,12 @@ void insertionSort( vector<int> dSet ){
 			temp = dSet[curs];
 
 		//move value down array
-		for(index = curs; (index > 0) && (dSet[index - 1] > dSet[index]); index--){
-			dSet[index] = dSet[index - 1];
+		for(index = curs; (index > 0) && (dSet[index - 1] > temp); index--){
+		  dSet[index] = dSet[index - 1];
 		}
 
 		//reinsert value
-			dSet[curs] = temp;
+			dSet[index] = temp;
 
 	}
 
