@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
 			double end = MPI_Wtime();
 
 		//calculate elapsed time and output
-			printf("%d, %f\n", disp_width, end - start);
+			printf("%d, %f\n", act_size, end - start);
 
 	}
 
