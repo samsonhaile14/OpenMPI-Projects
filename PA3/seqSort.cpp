@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 
 		//error checking
 		if(argc > 1){
-			fin.open( argv[1], ifstream::in )
+			fin.open( argv[1], ifstream::in );
 		}
 		else{
 			return 1;
