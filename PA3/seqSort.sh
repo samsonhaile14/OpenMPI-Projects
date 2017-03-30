@@ -5,4 +5,4 @@
 #SBATCH --mail-user=shaile@h1.cse.unr.edu
 #SBATCH --mail-type=ALL
 
-srun PA3Seq set1.dat
+srun PA3Seq set3.dat
