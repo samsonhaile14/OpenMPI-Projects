@@ -238,7 +238,7 @@ int main(int argc, char *argv[])
 
 			//receive all buckets from all other tasks
 				pos = 0;
-				for( index = 1; index < numtasks; index++ ){
+				for( index = 0; index < numtasks; index++ ){
 					if(index != taskid){
 						//first send size of variable sized array
 							MPI_Recv( &len, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD, &status );
