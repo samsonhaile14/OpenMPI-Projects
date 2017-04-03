@@ -155,13 +155,13 @@ int main(int argc, char *argv[])
 
 			//receive buckets from other tasks (transfer straight to result array)
 				pos = 0;
-				copy( sBucket.begin(), sBucket.end(), &results[pos] );
+				copy( sBucket.begin(), sBucket.end(), &result[pos] );
 				pos += sBucket.size();
 				for( index = 1; index < numtasks; index++ ){
 					MPI_Recv( &len, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD, &status );
 
 					if( len != 0){
-						MPI_Recv( &results[pos], len, MPI_INT, index, msgtag +1, MPI_COMM_WORLD, &status );
+						MPI_Recv( &result[pos], len, MPI_INT, index, msgtag +1, MPI_COMM_WORLD, &status );
 					}
 
 					pos += len;
@@ -260,23 +260,15 @@ int main(int argc, char *argv[])
 			//sort own bucket
 			  insertionSort( sBucket, pos );
 
-			//receive buckets from other tasks (transfer straight to result array)
-				pos = 0;
-				for( index = 1; index < numtasks; index++ ){
-					MPI_Recv( &len, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD, &status );
+			//send sorted bucket back to master task
+				MPI_Send( &pos, 1, MPI_INT, 0, msgtag, MPI_COMM_WORLD );
 
-					if( len != 0){
-						MPI_Recv( &results[pos], len, MPI_INT, index, msgtag +1, MPI_COMM_WORLD, &status );
-					}
-
-					pos += len;
-				}
+				MPI_Send( &sBucket[0], pos, MPI_INT, 0, msgtag+1, MPI_COMM_WORLD );
 
 			//clear buckets
 				for(index = 0; index < numtasks; index++){
 					buckets[index].clear();
 				}
-
 
 		}
 
