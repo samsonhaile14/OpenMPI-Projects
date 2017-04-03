@@ -74,8 +74,8 @@ int main(int argc, char *argv[])
 
 			//find the largest data point
 			for(index = 0; index < act_size;index++){
-				if(max < data[index]){
-					max = data[index];
+				if(max < dSet[index]){
+					max = dSet[index];
 				}
 			}
 
@@ -205,7 +205,7 @@ int main(int argc, char *argv[])
 				}
 
 				//send max val
-					MPI_Recv( &max, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD, &status );
+					MPI_Recv( &max, 1, MPI_INT, 0, msgtag, MPI_COMM_WORLD, &status );
 
 
 			//ensure all processes start work at same time
