@@ -72,6 +72,13 @@ int main(int argc, char *argv[])
 			int pos = 0;
 			int max = -1;
 
+			//find the largest data point
+			for(index = 0; index < act_size;index++){
+				if(max < data[index]){
+					max = data[index];
+				}
+			}
+
 			//distribute data to all other processes
 			for( index = 1; index < numtasks; index++ ){
 
@@ -82,6 +89,9 @@ int main(int argc, char *argv[])
 				if(len != 0){
 					MPI_Send( &dSet[pos], len, MPI_INT, index, msgtag + 1, MPI_COMM_WORLD );
 				}
+
+				//send max val
+					MPI_Send( &max, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD );
 
 				//change start position of array
 					pos += len;
@@ -97,13 +107,6 @@ int main(int argc, char *argv[])
 
 			//start timer
 				double start = MPI_Wtime();
-
-			//find the largest data point
-				for(index = 0; index < miniData.size();index++){
-					if(max < miniData[index]){
-						max = miniData[index];
-					}
-				}
 				
 			//organize data into respective buckets
 				for(index = 0; index < miniData.size();index++){
@@ -201,16 +204,13 @@ int main(int argc, char *argv[])
 					MPI_Recv( &sBucket[0], len, MPI_INT, 0, msgtag + 1, MPI_COMM_WORLD, &status );
 				}
 
+				//send max val
+					MPI_Recv( &max, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD, &status );
+
+
 			//ensure all processes start work at same time
 				MPI_Barrier(MPI_COMM_WORLD);
 
-			//find the largest data point
-				for(index = 0; index < len;index++){
-					if(max < sBucket[index]){
-						max = sBucket[index];
-					}
-				}
-				return 0;
 			//organize data into respective buckets
 				for(index = 0; index < len;index++){
 				  temp = sBucket[index] / (max / numtasks);
