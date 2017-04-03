@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
 
 		int taskid,numtasks;
 		int msgtag = 10;
+		MPI_Status status;
 
 	//initialization
 		MPI_Init(&argc, &argv);
@@ -89,7 +90,7 @@ int main(int argc, char *argv[])
 			//designate last set of numbers as bucket for master
 				miniData.resize( act_size - pos);
 
-				copy( dSet.begin() + pos, dSet.begin() + actSize, miniData.begin() );
+				copy( dSet.begin() + pos, dSet.begin() + act_size, miniData.begin() );
 
 			//ensure all processes start work at same time
 				MPI_Barrier(MPI_COMM_WORLD);
@@ -132,11 +133,11 @@ int main(int argc, char *argv[])
 				for( index = 1; index < numtasks; index++ ){
 
 					//first send size of variable sized array
-						MPI_Recv( &len, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD );
+						MPI_Recv( &len, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD, &status );
 
 					//receive variable sized array( msgtag changed to preserve send order )
 					if(len != 0){
-						MPI_Recv( &sBucket[pos], len, MPI_INT, index, msgtag + 1, MPI_COMM_WORLD );
+						MPI_Recv( &sBucket[pos], len, MPI_INT, index, msgtag + 1, MPI_COMM_WORLD, &status );
 					}
 
 					//change start position of array
@@ -157,10 +158,10 @@ int main(int argc, char *argv[])
 				copy( sBucket.begin(), sBucket.end(), &results[pos] );
 				pos += sBucket.size();
 				for( index = 1; index < numtasks; index++ ){
-					MPI_Recv( &len, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD );
+					MPI_Recv( &len, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD, &status );
 
 					if( len != 0){
-						MPI_Recv( &results[pos], len, MPI_INT, index, msgtag +1, MPI_COMM_WORLD );
+						MPI_Recv( &results[pos], len, MPI_INT, index, msgtag +1, MPI_COMM_WORLD, &status );
 					}
 
 					pos += len;
@@ -192,11 +193,11 @@ int main(int argc, char *argv[])
 			//Receive data from master
 
 				//first send size of variable sized array
-					MPI_Recv( &len, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD );
+					MPI_Recv( &len, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD, &status );
 
 				//receive variable sized array( msgtag changed to preserve send order )
 				if(len != 0){
-					MPI_Recv( &sBucket[0], len, MPI_INT, index, msgtag + 1, MPI_COMM_WORLD );
+					MPI_Recv( &sBucket[0], len, MPI_INT, index, msgtag + 1, MPI_COMM_WORLD, &status );
 				}
 
 			//ensure all processes start work at same time
@@ -239,11 +240,11 @@ int main(int argc, char *argv[])
 				for( index = 1; index < numtasks; index++ ){
 					if(index != taskid){
 						//first send size of variable sized array
-							MPI_Recv( &len, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD );
+							MPI_Recv( &len, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD, &status );
 
 						//receive variable sized array( msgtag changed to preserve send order )
 						if(len != 0){
-							MPI_Recv( &sBucket[pos], len, MPI_INT, index, msgtag + 1, MPI_COMM_WORLD );
+							MPI_Recv( &sBucket[pos], len, MPI_INT, index, msgtag + 1, MPI_COMM_WORLD, &status );
 						}
 
 						//change start position of array
@@ -262,10 +263,10 @@ int main(int argc, char *argv[])
 			//receive buckets from other tasks (transfer straight to result array)
 				pos = 0;
 				for( index = 1; index < numtasks; index++ ){
-					MPI_Recv( &len, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD );
+					MPI_Recv( &len, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD, &status );
 
 					if( len != 0){
-						MPI_Recv( &results[pos], len, MPI_INT, index, msgtag +1, MPI_COMM_WORLD );
+						MPI_Recv( &results[pos], len, MPI_INT, index, msgtag +1, MPI_COMM_WORLD, &status );
 					}
 
 					pos += len;
