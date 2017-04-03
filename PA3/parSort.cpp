@@ -187,6 +187,7 @@ int main(int argc, char *argv[])
 		for(act_size = 1000000; act_size < dSet.size(); act_size += 1000000){
 			vector< int > sBucket( act_size );
 
+			int pos = 0;
 			int max = -1;
 			int len;
 
@@ -216,7 +217,7 @@ int main(int argc, char *argv[])
 				  if( temp >= numtasks ){
 					temp = numtasks - 1;
 				  }
-				  buckets[ temp ].push_back(miniData[index]);
+				  buckets[ temp ].push_back(sBucket[index]);
 				}
 
 			//send each bucket to appropriate task
