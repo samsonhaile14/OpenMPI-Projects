@@ -105,6 +105,9 @@ int main(int argc, char *argv[])
 			//ensure all processes start work at same time
 				MPI_Barrier(MPI_COMM_WORLD);
 
+				printf( "past barrier\n" );
+				return 0;
+
 			//start timer
 				double start = MPI_Wtime();
 				
@@ -157,9 +160,7 @@ int main(int argc, char *argv[])
 			  insertionSort( sBucket, pos );
 
 			//receive buckets from other tasks (transfer straight to result array)
-				pos = 0;
-				copy( sBucket.begin(), sBucket.end(), &result[pos] );
-				pos += sBucket.size();
+				copy( sBucket.begin(), sBucket.begin() + pos, &result[0] );
 				for( index = 1; index < numtasks; index++ ){
 					MPI_Recv( &len, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD, &status );
 
