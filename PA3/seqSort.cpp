@@ -48,7 +48,8 @@ int main(int argc, char *argv[])
 		
 	//Sort across different sizes
 	for(act_size = 1000000; act_size < data.size(); act_size += 1000000){
-	        vector<int> buckets[100];
+	        vector<int> buckets[1];
+			bucketCount = 1;
 
 		int max = -1;
 
@@ -64,21 +65,21 @@ int main(int argc, char *argv[])
 
 		//organize data into respective buckets
 		for(index = 0; index < act_size;index++){
-		  temp = data[index] / (max / 100);
-		  if( temp >= 100 ){
-		    temp = 99;
+		  temp = data[index] / (max / bucketCount);
+		  if( temp >= bucketCount ){
+		    temp = bucketCount - 1;
 		  }
 		  buckets[ temp ].push_back(data[index]);
 		}
 
 		//sort each bucket
-		for(index = 0; index < 100; index++){
-		  insertionSort( buckets[index] );
+		for(index = 0; index < bucketCount; index++){
+		  sort( buckets[index].begin(),buckets[index].end );
 		}
 
 		//place into result array
 		int curs = 0, bIndex;
-		for(index = 0; index < 100; index++){
+		for(index = 0; index < bucketCount; index++){
 			for(bIndex = 0; bIndex < buckets[index].size(); bIndex++,curs++){
 				result[curs] = buckets[index][bIndex];			        
 			}
