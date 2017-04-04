@@ -132,7 +132,11 @@ int main(int argc, char *argv[])
 				}
 
 			//receive all buckets from all other tasks
-				pos = 0;
+				//receive bucket from self
+					copy( buckets[taskid].begin(), buckets[taskid].end(), sBucket.begin());
+
+				pos = buckets[taskid].size();
+
 				for( index = 1; index < numtasks; index++ ){
 
 					//first send size of variable sized array
@@ -148,8 +152,6 @@ int main(int argc, char *argv[])
 
 				}
 
-			//receive bucket from self
-				copy( buckets[taskid].begin(), buckets[taskid].end(), sBucket.begin() + pos);
 
 			//sort own bucket
 				insertionSort( sBucket, pos );
