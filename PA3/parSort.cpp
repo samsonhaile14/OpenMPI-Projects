@@ -130,9 +130,6 @@ int main(int argc, char *argv[])
 							MPI_Send( &(buckets[index][0]), len, MPI_INT, index, msgtag + 1, MPI_COMM_WORLD );
 						}
 				}
-				printf( "past send\n" );
-				return 0;
-
 
 			//receive all buckets from all other tasks
 				pos = 0;
@@ -158,6 +155,8 @@ int main(int argc, char *argv[])
 
 			//sort own bucket
 			  insertionSort( sBucket, pos );
+				printf( "past sort\n" );
+				return 0;
 
 			//receive buckets from other tasks (transfer straight to result array)
 				copy( sBucket.begin(), sBucket.begin() + pos, &result[0] );
