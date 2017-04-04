@@ -18,8 +18,8 @@ int main(int argc, char *argv[])
 {
   
 	//variables
-		int act_size,temp;
-		int index;
+		long int act_size,temp;
+		long int index;
 		vector<int> data;
 	    vector< vector<int> > buckets;
 		int bucketCount;
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 		vector<int> result(data.size(),0 );
 		
 	//Sort across different sizes
-	for(act_size = 100000; act_size < data.size(); act_size += 100000){
+	for(act_size = 700000; act_size < data.size(); act_size += 10000000){
 		int max = -1;
 
 		//start timer
