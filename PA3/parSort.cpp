@@ -105,9 +105,6 @@ int main(int argc, char *argv[])
 			//ensure all processes start work at same time
 				MPI_Barrier(MPI_COMM_WORLD);
 
-				printf( "past barrier\n" );
-				return 0;
-
 			//start timer
 				double start = MPI_Wtime();
 				
@@ -133,6 +130,9 @@ int main(int argc, char *argv[])
 							MPI_Send( &(buckets[index][0]), len, MPI_INT, index, msgtag + 1, MPI_COMM_WORLD );
 						}
 				}
+				printf( "past send\n" );
+				return 0;
+
 
 			//receive all buckets from all other tasks
 				pos = 0;
