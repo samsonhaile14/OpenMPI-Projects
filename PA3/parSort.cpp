@@ -147,16 +147,12 @@ int main(int argc, char *argv[])
 						pos += len;
 
 				}
-				printf( "past receive\n" );
-				return 0;
 
 			//receive bucket from self
 				copy( buckets[taskid].begin(), buckets[taskid].end(), sBucket.begin() + pos);
 
-				pos += buckets[taskid].size();
-
 			//sort own bucket
-			  insertionSort( sBucket, pos );
+				insertionSort( sBucket, pos );
 
 			//receive buckets from other tasks (transfer straight to result array)
 				copy( sBucket.begin(), sBucket.begin() + pos, &result[0] );
