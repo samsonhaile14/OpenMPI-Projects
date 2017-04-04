@@ -49,8 +49,8 @@ int main(int argc, char *argv[])
 		
 	//Sort across different sizes
 	for(act_size = 1000000; act_size < data.size(); act_size += 8000000){
-	    vector<int> buckets[1];
-		int bucketCount = 1;
+	    vector<int> buckets[20];
+		int bucketCount = 20;
 
 		int max = -1;
 
