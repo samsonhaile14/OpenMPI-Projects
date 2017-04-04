@@ -171,12 +171,8 @@ int main(int argc, char *argv[])
 			//end timer
 				double end = MPI_Wtime();
 
-			for( index = 0; index < pos; index++){
-			printf( "%d, %d\n", result[index], index);
-			}
-
 			//calculate elapsed time and output
-		  			//printf("%d, %f\n", act_size, end - start);
+		  		printf("%d, %f\n", act_size, end - start);
 
 			//clear buckets
 				for(index = 0; index < numtasks; index++){
