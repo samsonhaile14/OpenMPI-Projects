@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 			return 1;
 		}
 
-		bucketCount = atoi( argv[1] );
+		bucketCount = atoi( argv[2] );
 
 		//allocating enough buckets
 		for( index = 0; index < bucketCount; index++ ){
