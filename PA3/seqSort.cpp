@@ -21,10 +21,25 @@ int main(int argc, char *argv[])
 		int act_size,temp;
 		int index;
 		vector<int> data;
+	    vector< vector<int> > buckets;
+		int bucketCount;
 
 		//initialization
 		MPI_Init(&argc, &argv);	//only used for timer
 	       
+		if( argc < 2){
+			return 1;
+		}
+
+		bucketCount = atoi( argv[1] );
+
+		//allocating enough buckets
+		for( index = 0; index < bucketCount; index++ ){
+			vector<int> bTemp;
+
+			buckets.push_back(bTemp);
+		}
+
 	//Read data from file
 		ifstream fin;
 
@@ -48,10 +63,7 @@ int main(int argc, char *argv[])
 		vector<int> result(data.size(),0 );
 		
 	//Sort across different sizes
-	for(act_size = 1000000; act_size < data.size(); act_size += 1000000){
-	    vector<int> buckets[20];
-		int bucketCount = 20;
-
+	for(act_size = 100000; act_size < data.size(); act_size += 100000){
 		int max = -1;
 
 		//start timer
