@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
 
 		//sort each bucket
 		for(index = 0; index < bucketCount; index++){
-		  insertionSort( buckets[index].begin(),buckets[index].end() );
+		  insertionSort( buckets[index] );
 		}
 
 		//place into result array
