@@ -5,7 +5,7 @@
 
 using namespace std;
 
-#define MAX_SIZE	1000
+#define MAX_SIZE	100000
 
 main(){
 	int i;
