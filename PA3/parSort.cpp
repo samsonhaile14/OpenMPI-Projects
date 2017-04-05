@@ -106,44 +106,53 @@ int main(int argc, char *argv[])
 				}
 
 			//send each bucket to appropriate task
-				for( index = 1; index < numtasks; index++ ){
-						//get size of bucket
-							len = buckets[index].size();
-
-						//first send size of variable sized array
-							MPI_Send( &len, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD );
-
-						//receive variable sized array( msgtag changed to preserve send order )
-						if( len != 0 ){
-							MPI_Send( &(buckets[index][0]), len, MPI_INT, index, msgtag + 1, MPI_COMM_WORLD );
-						}
-				}
-
-			//receive all buckets from all other tasks
 				//receive bucket from self
 					copy( buckets[taskid].begin(), buckets[taskid].end(), sBucket.begin());
 
 					pos = buckets[taskid].size();
 					sBucket.resize(pos);
-				for( index = 1; index < numtasks; index++ ){
 
-					//first send size of variable sized array
-						MPI_Recv( &len, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD, &status );
+				//Perform communication for circulating buckets
+				for( index = 0; index < numtasks; index++ ){
+					
+					//turn to send if index == taskid
+					if(index == taskid){
+						for( temp = 0; temp < numtasks; temp++ ){
+							if(temp != taskid){
+								//get size of bucket
+									len = buckets[index].size();
 
-						sBucket.resize(pos + len);
+								//first send size of variable sized array
+									MPI_Send( &len, 1, MPI_INT, temp, msgtag, MPI_COMM_WORLD );
 
-					//receive variable sized array( msgtag changed to preserve send order )
-					if(len != 0){
-						MPI_Recv( &sBucket[pos], len, MPI_INT, index, msgtag + 1, MPI_COMM_WORLD, &status );
+								//receive variable sized array( msgtag changed to preserve send order )
+								if( len != 0 ){
+									MPI_Send( &(buckets[index][0]), len, MPI_INT, temp, msgtag + 1, MPI_COMM_WORLD );
+								}
+							}
+						}
 					}
 
-					//change start position of array
-						pos += len;
+					//else, task is on receiving end
+					else{
+						//first send size of variable sized array
+							MPI_Recv( &len, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD, &status );
+
+							sBucket.resize(pos + len);
+
+						//receive variable sized array( msgtag changed to preserve send order )
+						if(len != 0){
+							MPI_Recv( &sBucket[pos], len, MPI_INT, index, msgtag + 1, MPI_COMM_WORLD, &status );
+						}
+
+						//change start position of array
+							pos += len;						
+					}
+
+					MPI_Barrier(MPI_COMM_WORLD); //wait till all tasks finish receiving data
 
 				}
 
-				MPI_Barrier(MPI_COMM_WORLD);
-				return 0;
 				
 			//sort own bucket
 				sort( sBucket.begin(), sBucket.end() );
@@ -201,34 +210,39 @@ int main(int argc, char *argv[])
 				  buckets[ temp ].push_back(sBucket[index]);
 				}
 
-			//send each bucket to appropriate task
-				for( index = 0; index < numtasks; index++ ){
-					if(index != taskid){
-						//get size of bucket
-							len = buckets[index].size();
-
-						//first send size of variable sized array
-							MPI_Send( &len, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD );
-
-						//receive variable sized array( msgtag changed to preserve send order )
-						if( len != 0 ){
-							MPI_Send( &(buckets[index][0]), len, MPI_INT, index, msgtag + 1, MPI_COMM_WORLD );
-						}
-					}
-				}
-
-			//receive all buckets from all other tasks
 				//receive bucket from self
 					copy( buckets[taskid].begin(), buckets[taskid].end(), sBucket.begin());
 
 					pos = buckets[taskid].size();
 					sBucket.resize(pos);
+
+				//Perform communication for circulating buckets
 				for( index = 0; index < numtasks; index++ ){
-					if(index != taskid){
-						//first receive size of variable sized array
+					
+					//turn to send if index == taskid
+					if(index == taskid){
+						for( temp = 0; temp < numtasks; temp++ ){
+							if(temp != taskid){
+								//get size of bucket
+									len = buckets[index].size();
+
+								//first send size of variable sized array
+									MPI_Send( &len, 1, MPI_INT, temp, msgtag, MPI_COMM_WORLD );
+
+								//receive variable sized array( msgtag changed to preserve send order )
+								if( len != 0 ){
+									MPI_Send( &(buckets[index][0]), len, MPI_INT, temp, msgtag + 1, MPI_COMM_WORLD );
+								}
+							}
+						}
+					}
+
+					//else, task is on receiving end
+					else{
+						//first send size of variable sized array
 							MPI_Recv( &len, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD, &status );
 
-						sBucket.resize(pos + len);
+							sBucket.resize(pos + len);
 
 						//receive variable sized array( msgtag changed to preserve send order )
 						if(len != 0){
@@ -236,13 +250,13 @@ int main(int argc, char *argv[])
 						}
 
 						//change start position of array
-							pos += len;
+							pos += len;						
 					}
+
+					MPI_Barrier(MPI_COMM_WORLD); //wait till all tasks finish receiving data
+
 				}
 
-
-				MPI_Barrier(MPI_COMM_WORLD);
-				return 0;
 			//sort own bucket
 			  sort( sBucket.begin(), sBucket.end() );
 
