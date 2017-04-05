@@ -120,14 +120,14 @@ int main(int argc, char *argv[])
 						for( temp = 0; temp < numtasks; temp++ ){
 							if(temp != taskid){
 								//get size of bucket
-									len = buckets[index].size();
+									len = buckets[temp].size();
 
 								//first send size of variable sized array
 									MPI_Send( &len, 1, MPI_INT, temp, msgtag, MPI_COMM_WORLD );
 
 								//receive variable sized array( msgtag changed to preserve send order )
 								if( len != 0 ){
-									MPI_Send( &(buckets[index][0]), len, MPI_INT, temp, msgtag + 1, MPI_COMM_WORLD );
+									MPI_Send( &(buckets[temp][0]), len, MPI_INT, temp, msgtag + 1, MPI_COMM_WORLD );
 								}
 							}
 						}
@@ -224,14 +224,14 @@ int main(int argc, char *argv[])
 						for( temp = 0; temp < numtasks; temp++ ){
 							if(temp != taskid){
 								//get size of bucket
-									len = buckets[index].size();
+									len = buckets[temp].size();
 
 								//first send size of variable sized array
 									MPI_Send( &len, 1, MPI_INT, temp, msgtag, MPI_COMM_WORLD );
 
 								//receive variable sized array( msgtag changed to preserve send order )
 								if( len != 0 ){
-									MPI_Send( &(buckets[index][0]), len, MPI_INT, temp, msgtag + 1, MPI_COMM_WORLD );
+									MPI_Send( &(buckets[temp][0]), len, MPI_INT, temp, msgtag + 1, MPI_COMM_WORLD );
 								}
 							}
 						}
