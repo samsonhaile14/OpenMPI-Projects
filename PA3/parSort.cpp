@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
 	//common variables
 		long long int act_size,temp;
 		long long int index;
+		long long int max_size = 500000000;
 		vector< vector<int> > buckets;
 
 		int taskid,numtasks;
@@ -44,15 +45,15 @@ int main(int argc, char *argv[])
 		vector<int> dSet;
 
 		//data read
-		for(index = 0; index < 500000000; index++){
-			data.push_back(random() % 10000);
+		for(index = 0; index < max_size; index++){
+			dSet.push_back(random() % 10000);
 		}
 		
 		//designate array for sorted results
 			vector<int> result(dSet.size(),0 );
 		
 		//Sort across different sizes
-		for(act_size = 500000000; act_size < data.size(); act_size += 500000000){
+		for(act_size = 500000000; act_size <= max_size; act_size += 500000000){
 			vector< int > sBucket;
 
 			int len = act_size / numtasks;
@@ -83,7 +84,7 @@ int main(int argc, char *argv[])
 				//change start position of array
 					pos += len;
 			}
-
+			
 			//designate last set of numbers as bucket for master
 				sBucket.resize( act_size - pos);
 
@@ -141,6 +142,9 @@ int main(int argc, char *argv[])
 
 				}
 
+				MPI_Barrier(MPI_COMM_WORLD);
+				return 0;
+				
 			//sort own bucket
 				sort( sBucket.begin(), sBucket.end() );
 
@@ -150,7 +154,7 @@ int main(int argc, char *argv[])
 				double end = MPI_Wtime();
 
 			//calculate elapsed time and output
-		  		printf("%d, %f\n", act_size, end - start);
+		  		printf("%lld, %f\n", act_size, end - start);
 
 			//clear buckets
 				for(index = 0; index < numtasks; index++){
@@ -162,7 +166,7 @@ int main(int argc, char *argv[])
 
 	else{
 		//Sort across different sizes
-		for(act_size = 500000000; act_size < data.size(); act_size += 500000000){
+		for(act_size = 500000000; act_size <= max_size; act_size += 500000000){
 			vector< int > sBucket;
 
 			int pos = 0;
@@ -236,6 +240,9 @@ int main(int argc, char *argv[])
 					}
 				}
 
+
+				MPI_Barrier(MPI_COMM_WORLD);
+				return 0;
 			//sort own bucket
 			  sort( sBucket.begin(), sBucket.end() );
 
