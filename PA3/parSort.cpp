@@ -5,15 +5,11 @@
 #include <stdlib.h>
 #include <vector>
 #include <algorithm>
-#include <fstream>
 #include "mpi.h"
 
 #define MASTER 0
 
 using namespace std;
-
-//function specifications
-void insertionSort( vector<int> &dSet, int size );
 
 //main program
 int main(int argc, char *argv[])
@@ -22,7 +18,7 @@ int main(int argc, char *argv[])
 	//common variables
 		long long int act_size,temp;
 		long long int index;
-		long long int max_size = 500000000;
+		long long int max_size = 2500000000;
 		vector< vector<int> > buckets;
 
 		int taskid,numtasks;
@@ -163,7 +159,7 @@ int main(int argc, char *argv[])
 				double end = MPI_Wtime();
 
 			//calculate elapsed time and output
-		  		printf("%lld, %f\n", act_size, end - start);
+		  		printf("%d, %lld, %f\n", numtasks, act_size, end - start);
 
 			//clear buckets
 				for(index = 0; index < numtasks; index++){
@@ -273,29 +269,6 @@ int main(int argc, char *argv[])
 
 	//terminate
 		MPI_Finalize();
-
-}
-
-
-void insertionSort( vector<int> &dSet, int size ){
-
-	int curs = 0,index;
-	int temp;
-
-	//perform insertion sort for each value in array
-	for( curs = 0; curs < size; curs++ ){
-		//save value for insertion
-			temp = dSet[curs];
-
-		//move value down array
-		for(index = curs; (index > 0) && (dSet[index - 1] > temp); index--){
-		  dSet[index] = dSet[index - 1];
-		}
-
-		//reinsert value
-			dSet[index] = temp;
-
-	}
 
 }
 
