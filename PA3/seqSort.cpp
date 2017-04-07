@@ -11,7 +11,7 @@
 using namespace std;
 
 //function specifications
-void insertionSort( vector<int> &dSet );
+void insertionSort( vector<int> &dSet, long long int size );
 
 //main program
 int main(int argc, char *argv[])
@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
 	//variables
 		long long int act_size,temp;
 		long long int index;
+		long long int max_size;
 		vector<int> data;
 	    vector< vector<int> > buckets;
 		int bucketCount;
@@ -27,15 +28,17 @@ int main(int argc, char *argv[])
 		//initialization
 		MPI_Init(&argc, &argv);	//only used for timer
 	       
-		if( argc < 1){
+		if( argc < 2){
 			return 1;
 		}
 
-		bucketCount = atoi( argv[1] );
+		bucketCount = atoi( argv[1] );		
+		max_size = atoll(argv[2]);
 
+		
 		//allocating enough buckets
 		for( index = 0; index < bucketCount; index++ ){
-			vector<int> bTemp;
+			vector<int> bTemp(max_size);
 
 			buckets.push_back(bTemp);
 		}
@@ -43,14 +46,15 @@ int main(int argc, char *argv[])
 	//generate constant data
 
 		//data read
-		for(index = 0; index < 1500000000; index++){
+		for(index = 0; index < max_size; index++){
 			data.push_back(random() % 10000);
 		}
- 	
+ 
 	//Sort across different sizes
-	for(act_size = 1500000000; act_size <= data.size(); act_size += 500000000){
-		int max = -1;
-
+	for(act_size = max_size; act_size <= data.size(); act_size += max_size/5){
+		int max = data[0];
+		vector<long long int> bSize(bucketCount, 0);
+		
 		//start timer
 		double start = MPI_Wtime();
 
@@ -67,12 +71,13 @@ int main(int argc, char *argv[])
 		  if( temp >= bucketCount ){
 		    temp = bucketCount - 1;
 		  }
-		  buckets[ temp ].push_back(data[index]);
+		  buckets[ temp ][bSize[temp]] = (data[index]);
+		  bSize[temp]++;
 		}
 
 		//sort each bucket
 		for(index = 0; index < bucketCount; index++){
-		  sort( buckets[index].begin(), buckets[index].end() );
+		  insertionSort( buckets[index], bSize[index] );
 		}
 
 		//end timer
@@ -81,10 +86,6 @@ int main(int argc, char *argv[])
 		//calculate elapsed time and output
       			printf("%d, %lld, %f\n", bucketCount, act_size, end - start);
 
-		//Clear buckets
-			for(index = 0; index < bucketCount; index++ ){
-			  buckets[index].clear();
-			}
 	}
 
 	//terminate
@@ -93,13 +94,13 @@ int main(int argc, char *argv[])
 }
 
 //switched for standard sort
-void insertionSort( vector<int> &dSet ){
+void insertionSort( vector<int> &dSet, long long int size ){
 
-	int curs = 0,index;
+	long long int curs = 0,index;
 	int temp;
 
 	//perform insertion sort for each value in array
-	for( curs = 0; curs < dSet.size(); curs++ ){
+	for( curs = 0; curs < size; curs++ ){
 		//save value for insertion
 			temp = dSet[curs];
 
