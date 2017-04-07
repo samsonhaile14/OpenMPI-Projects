@@ -43,12 +43,12 @@ int main(int argc, char *argv[])
 	//generate constant data
 
 		//data read
-		for(index = 0; index < 2500000000; index++){
+		for(index = 0; index < 1500000000; index++){
 			data.push_back(random() % 10000);
 		}
  	
 	//Sort across different sizes
-	for(act_size = 500000000; act_size <= data.size(); act_size += 500000000){
+	for(act_size = 1500000000; act_size <= data.size(); act_size += 500000000){
 		int max = -1;
 
 		//start timer
