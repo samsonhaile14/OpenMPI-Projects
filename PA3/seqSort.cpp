@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 		
 		//allocating enough buckets
 		for( index = 0; index < bucketCount; index++ ){
-			vector<long long int> bTemp(max_size);
+			vector<int> bTemp(max_size);
 
 			buckets.push_back(bTemp);
 		}
