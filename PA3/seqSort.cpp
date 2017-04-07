@@ -93,7 +93,6 @@ int main(int argc, char *argv[])
 
 }
 
-//switched for standard sort
 void insertionSort( vector<int> &dSet, long long int size ){
 
 	long long int curs = 0,index;
