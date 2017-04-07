@@ -33,7 +33,6 @@ int main(int argc, char *argv[])
 
 		bucketCount = atoi( argv[1] );		
 		max_size = atoll(argv[2]);
-
 		
 		//allocating enough buckets
 		for( index = 0; index < bucketCount; index++ ){
@@ -51,7 +50,7 @@ int main(int argc, char *argv[])
 		}
  
 	//Sort across different sizes
-	for(act_size = max_size; act_size <= data.size(); act_size += max_size/5){
+	for(act_size = max_size / 5; act_size <= data.size(); act_size += max_size / 5){
 		int max = data[0];
 		vector<long long int> bSize(bucketCount, 0);
 		

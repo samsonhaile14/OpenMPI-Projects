@@ -11,6 +11,9 @@
 
 using namespace std;
 
+//function declarations
+void insertionSort( vector<int> &dSet, long long int size );
+
 //main program
 int main(int argc, char *argv[])
 {
@@ -18,7 +21,7 @@ int main(int argc, char *argv[])
 	//common variables
 		long long int act_size,temp;
 		long long int index;
-		long long int max_size = 2500000000;
+		long long int max_size;
 		vector< vector<int> > buckets;
 
 		int taskid,numtasks;
@@ -30,28 +33,33 @@ int main(int argc, char *argv[])
 		MPI_Comm_size(MPI_COMM_WORLD,&numtasks);
 		MPI_Comm_rank(MPI_COMM_WORLD,&taskid);
 
+		//read largest size to be used
+		if( argc < 1){
+			return 1;
+		}
+		
+		max_size = atoll(argv[1]);
+		
 	//Set appropriate number of buckets
 		for(index = 0; index < numtasks; index++){
-			vector<int> vTemp;
+			vector<int> vTemp(max_size);
 			buckets.push_back(vTemp);
 		}
 
 	if( taskid == MASTER ){   
-	//generate constant data
-		vector<int> dSet;
+		//generate constant data
+		vector<int> dSet(max_size);
+		vector<int> sBucket(max_size);
 
 		//data read
 		for(index = 0; index < max_size; index++){
-			dSet.push_back(random() % 10000);
+			dSet[index] = (random() % 10000);
 		}
-		
-		//designate array for sorted results
-			vector<int> result(dSet.size(),0 );
-		
+				
 		//Sort across different sizes
-		for(act_size = 500000000; act_size <= max_size; act_size += 500000000){
-			vector< int > sBucket;
-
+		for(act_size = max_size/5; act_size <= max_size; act_size += max_size/5){
+			vector< long long int > bSize(numtasks, 0);
+			
 			int len = act_size / numtasks;
 			int pos = 0;
 			int max = -1;
@@ -75,38 +83,39 @@ int main(int argc, char *argv[])
 				}
 
 				//send max val
-					MPI_Send( &max, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD );
+					MPI_Send( &max, 1, MPI_INT, index, msgtag + 2, MPI_COMM_WORLD );
 
 				//change start position of array
 					pos += len;
 			}
 			
 			//designate last set of numbers as bucket for master
-				sBucket.resize( act_size - pos);
-
 				copy( dSet.begin() + pos, dSet.begin() + act_size, sBucket.begin() );
 
+				pos = act_size - pos;
+				
 			//ensure all processes start work at same time
 				MPI_Barrier(MPI_COMM_WORLD);
-
+				
 			//start timer
 				double start = MPI_Wtime();
 				
 			//organize data into respective buckets
-				for(index = 0; index < sBucket.size();index++){
-				  temp = sBucket[index] / (max / numtasks);
-				  if( temp >= numtasks ){
-					temp = numtasks - 1;
-				  }
-				  buckets[ temp ].push_back(sBucket[index]);
-				}
+			for(index = 0; index < pos;index++){
+			  temp = data[index] / (max / numtasks);
+			  if( temp >= numtasks ){
+				temp = numtasks - 1;
+			  }
+			  buckets[ temp ][bSize[temp]] = (data[index]);
+			  bSize[temp]++;
+			}
 
 			//send each bucket to appropriate task
 				//receive bucket from self
-					copy( buckets[taskid].begin(), buckets[taskid].end(), sBucket.begin());
+					copy( buckets[taskid].begin(), buckets[taskid].begin() + bSize[taskid],
+							sBucket.begin());
 
-					pos = buckets[taskid].size();
-					sBucket.resize(pos);
+					pos = bSize[taskid];
 
 				//Perform communication for circulating buckets
 				for( index = 0; index < numtasks; index++ ){
@@ -116,7 +125,7 @@ int main(int argc, char *argv[])
 						for( temp = 0; temp < numtasks; temp++ ){
 							if(temp != taskid){
 								//get size of bucket
-									len = buckets[temp].size();
+									len = bSize[temp];
 
 								//first send size of variable sized array
 									MPI_Send( &len, 1, MPI_INT, temp, msgtag, MPI_COMM_WORLD );
@@ -134,8 +143,6 @@ int main(int argc, char *argv[])
 						//first send size of variable sized array
 							MPI_Recv( &len, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD, &status );
 
-							sBucket.resize(pos + len);
-
 						//receive variable sized array( msgtag changed to preserve send order )
 						if(len != 0){
 							MPI_Recv( &sBucket[pos], len, MPI_INT, index, msgtag + 1, MPI_COMM_WORLD, &status );
@@ -151,7 +158,7 @@ int main(int argc, char *argv[])
 
 				
 			//sort own bucket
-				sort( sBucket.begin(), sBucket.end() );
+				insertionSort( sBucket, pos );
 
 			MPI_Barrier(MPI_COMM_WORLD);	//block to get accurate timing
 
@@ -170,10 +177,10 @@ int main(int argc, char *argv[])
 	}
 
 	else{
+		vector<int> sBucket(max_size);
 		//Sort across different sizes
-		for(act_size = 500000000; act_size <= max_size; act_size += 500000000){
-			vector< int > sBucket;
-
+		for(act_size = max_size / 5; act_size <= max_size; act_size += max_size/5){
+			vector<long long int> bSize;
 			int pos = 0;
 			int max = -1;
 			int len;
@@ -183,36 +190,33 @@ int main(int argc, char *argv[])
 				//first send size of variable sized array
 					MPI_Recv( &len, 1, MPI_INT, 0, msgtag, MPI_COMM_WORLD, &status );
 
-				//appropriately size bucket
-					sBucket.resize(len);
-
 				//receive variable sized array( msgtag changed to preserve send order )
 				if(len != 0){
 					MPI_Recv( &sBucket[0], len, MPI_INT, 0, msgtag + 1, MPI_COMM_WORLD, &status );
 				}
 
 				//receive max val
-					MPI_Recv( &max, 1, MPI_INT, 0, msgtag, MPI_COMM_WORLD, &status );
+					MPI_Recv( &max, 1, MPI_INT, 0, msgtag + 2, MPI_COMM_WORLD, &status );
 
 			//ensure all processes start work at same time
 				MPI_Barrier(MPI_COMM_WORLD);
 
 			//organize data into respective buckets
-				for(index = 0; index < len;index++){
-				  temp = sBucket[index] / (max / numtasks);
+				for(index = 0; index < len; index++){
+				  temp = data[index] / (max / numtasks);
 				  if( temp >= numtasks ){
 					temp = numtasks - 1;
 				  }
-				  buckets[ temp ].push_back(sBucket[index]);
+				  buckets[ temp ][bSize[temp]] = (data[index]);
+				  bSize[temp]++;
 				}
 
-				//receive bucket from self
-					copy( buckets[taskid].begin(), buckets[taskid].end(), sBucket.begin());
+			//receive bucket from self
+				copy( buckets[taskid].begin(), buckets[taskid].begin() + bSize[taskid], sBucket.begin());
 
-					pos = buckets[taskid].size();
-					sBucket.resize(pos);
+				pos = bSize[taskid];
 
-				//Perform communication for circulating buckets
+			//Perform communication for circulating buckets
 				for( index = 0; index < numtasks; index++ ){
 					
 					//turn to send if index == taskid
@@ -220,7 +224,7 @@ int main(int argc, char *argv[])
 						for( temp = 0; temp < numtasks; temp++ ){
 							if(temp != taskid){
 								//get size of bucket
-									len = buckets[temp].size();
+									len = bSize[temp];
 
 								//first send size of variable sized array
 									MPI_Send( &len, 1, MPI_INT, temp, msgtag, MPI_COMM_WORLD );
@@ -238,8 +242,6 @@ int main(int argc, char *argv[])
 						//first send size of variable sized array
 							MPI_Recv( &len, 1, MPI_INT, index, msgtag, MPI_COMM_WORLD, &status );
 
-							sBucket.resize(pos + len);
-
 						//receive variable sized array( msgtag changed to preserve send order )
 						if(len != 0){
 							MPI_Recv( &sBucket[pos], len, MPI_INT, index, msgtag + 1, MPI_COMM_WORLD, &status );
@@ -254,7 +256,7 @@ int main(int argc, char *argv[])
 				}
 
 			//sort own bucket
-			  sort( sBucket.begin(), sBucket.end() );
+			  insertionSort( sBucket, pos );
 
 			MPI_Barrier(MPI_COMM_WORLD);	//block to get accurate timing
 
@@ -271,4 +273,27 @@ int main(int argc, char *argv[])
 		MPI_Finalize();
 
 }
+
+void insertionSort( vector<int> &dSet, long long int size ){
+
+	long long int curs = 0,index;
+	int temp;
+
+	//perform insertion sort for each value in array
+	for( curs = 0; curs < size; curs++ ){
+		//save value for insertion
+			temp = dSet[curs];
+
+		//move value down array
+		for(index = curs; (index > 0) && (dSet[index - 1] > temp); index--){
+		  dSet[index] = dSet[index - 1];
+		}
+
+		//reinsert value
+			dSet[index] = temp;
+
+	}
+
+}
+
 
