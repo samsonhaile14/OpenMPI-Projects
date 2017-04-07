@@ -21,7 +21,6 @@ int main(int argc, char *argv[])
 		long long int act_size,temp;
 		long long int index;
 		long long int max_size;
-		vector<int> data;
 	    vector< vector<int> > buckets;
 		int bucketCount;
 
@@ -38,16 +37,17 @@ int main(int argc, char *argv[])
 		
 		//allocating enough buckets
 		for( index = 0; index < bucketCount; index++ ){
-			vector<int> bTemp(max_size);
+			vector<long long int> bTemp(max_size);
 
 			buckets.push_back(bTemp);
 		}
 
 	//generate constant data
+		vector<int> data(max_size);
 
 		//data read
 		for(index = 0; index < max_size; index++){
-			data.push_back(random() % 10000);
+			data[index] = (random() % 10000);
 		}
  
 	//Sort across different sizes
