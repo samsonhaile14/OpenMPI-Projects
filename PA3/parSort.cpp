@@ -102,11 +102,11 @@ int main(int argc, char *argv[])
 				
 			//organize data into respective buckets
 			for(index = 0; index < pos;index++){
-			  temp = dSet[index] / (max / numtasks);
+			  temp = sBucket[index] / (max / numtasks);
 			  if( temp >= numtasks ){
 				temp = numtasks - 1;
 			  }
-			  buckets[ temp ][bSize[temp]] = (data[index]);
+			  buckets[ temp ][bSize[temp]] = (sBucket[index]);
 			  bSize[temp]++;
 			}
 
@@ -203,11 +203,11 @@ int main(int argc, char *argv[])
 
 			//organize data into respective buckets
 				for(index = 0; index < len; index++){
-				  temp = dSet[index] / (max / numtasks);
+				  temp = sBucket[index] / (max / numtasks);
 				  if( temp >= numtasks ){
 					temp = numtasks - 1;
 				  }
-				  buckets[ temp ][bSize[temp]] = (data[index]);
+				  buckets[ temp ][bSize[temp]] = (sBucket[index]);
 				  bSize[temp]++;
 				}
 
