@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
 				
 			//organize data into respective buckets
 			for(index = 0; index < pos;index++){
-			  temp = data[index] / (max / numtasks);
+			  temp = dSet[index] / (max / numtasks);
 			  if( temp >= numtasks ){
 				temp = numtasks - 1;
 			  }
@@ -203,7 +203,7 @@ int main(int argc, char *argv[])
 
 			//organize data into respective buckets
 				for(index = 0; index < len; index++){
-				  temp = data[index] / (max / numtasks);
+				  temp = dSet[index] / (max / numtasks);
 				  if( temp >= numtasks ){
 					temp = numtasks - 1;
 				  }
