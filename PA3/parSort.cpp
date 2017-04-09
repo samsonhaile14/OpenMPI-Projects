@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 			
 			int len = act_size / numtasks;
 			int pos = 0;
-			int max = -1;
+			int max = dSet[0];
 
 			//find the largest data point
 			for(index = 0; index < act_size;index++){
@@ -180,7 +180,7 @@ int main(int argc, char *argv[])
 		vector<int> sBucket(max_size);
 		//Sort across different sizes
 		for(act_size = max_size / 5; act_size <= max_size; act_size += max_size/5){
-			vector<long long int> bSize;
+			vector<long long int> bSize(numtasks,0);
 			int pos = 0;
 			int max = -1;
 			int len;
