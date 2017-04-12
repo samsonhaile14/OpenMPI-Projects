@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 	}
 			
 	//compute product
-	for(disp_width = max_width; disp_width <= max_width; disp_width += 100){
+	for(disp_width = max_width / 5; disp_width <= max_width; disp_width += max_width / 5){
 		disp_height = disp_width;
 
 		//start timer
