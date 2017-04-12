@@ -40,22 +40,7 @@ int main(int argc, char *argv[])
 			matB[index][jndex] = (1 + (random() % 9999));
 		}
 	}
-	
-	for(index = 0; index < max_width; index++){
-		for(jndex = 0; jndex < max_height; jndex++){
-			printf( "%lld ", matA[index][jndex]);
-		}
-		printf("\n");
-	}
-	printf("\n");
-	for(index = 0; index < max_width; index++){
-		for(jndex = 0; jndex < max_height; jndex++){
-			printf( "%lld ", matB[index][jndex]);
-		}
-		printf("\n");
-	}	
-	printf("\n");
-		
+			
 	//compute product
 	for(disp_width = max_width; disp_width <= max_width; disp_width += 100){
 		disp_height = disp_width;
@@ -74,17 +59,9 @@ int main(int argc, char *argv[])
 
 		//end timer
 		double end = MPI_Wtime();
-
-		for(index = 0; index < max_width; index++){
-			for(jndex = 0; jndex < max_height; jndex++){
-				printf( "%lld ", result[index][jndex]);
-			}
-			printf("\n");
-		}	
-
 		
 		//calculate elapsed time and output
-//		printf("%d, %f\n", disp_width, end - start);
+		printf("%d, %f\n", disp_width, end - start);
 
 		}
 
