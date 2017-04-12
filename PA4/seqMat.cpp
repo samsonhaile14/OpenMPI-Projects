@@ -1,10 +1,12 @@
-//Sequential mandelbrot program
+//Sequential matrix multiplication
 // by Samson Haile
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
 #include "mpi.h"
+
+using namespace std;
 
 //main program
 int main(int argc, char *argv[])
