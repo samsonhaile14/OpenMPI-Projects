@@ -14,10 +14,15 @@ int main(int argc, char *argv[])
 	long long int index, jndex, kndex;
 	int x,y, max_width, max_height,disp_width,disp_height;
 	
+
+	if(argc < 1){
+		return 1;
+	}
+	
+	max_width = max_height = atoll(argv[1]);
+
 	//initialization
 	MPI_Init(&argc, &argv);	//only used for timer
-
-	max_width = max_height = 5;
 	
 	//Set appropriate number of elements per matrix
 		vector<long long int> vTemp(max_width, 0);
@@ -40,13 +45,14 @@ int main(int argc, char *argv[])
 		}
 		printf("\n");
 	}
-	printf("\n")
+	printf("\n");
 	for(index = 0; index < max_width; index++){
 		for(jndex = 0; jndex < max_height; jndex++){
 			printf( "%lld ", matB[index][jndex]);
 		}
 		printf("\n");
 	}	
+	printf("\n");
 		
 	//compute product
 	for(disp_width = max_width; disp_width <= max_width; disp_width += 100){
@@ -64,10 +70,17 @@ int main(int argc, char *argv[])
 			}
 		}
 
-		
 		//end timer
 		double end = MPI_Wtime();
 
+		for(index = 0; index < max_width; index++){
+			for(jndex = 0; jndex < max_height; jndex++){
+				printf( "%lld ", result[index][jndex]);
+			}
+			printf("\n");
+		}	
+
+		
 		//calculate elapsed time and output
 //		printf("%d, %f\n", disp_width, end - start);
 
