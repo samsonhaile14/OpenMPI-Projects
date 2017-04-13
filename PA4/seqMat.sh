@@ -5,4 +5,4 @@
 #SBATCH --mail-user=shaile@h1.cse.unr.edu
 #SBATCH --mail-type=ALL
 
-srun PA4Seq 5
+srun PA4Seq 2650
