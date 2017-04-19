@@ -250,8 +250,8 @@ void printMat( vector<int> matA, int mat_width){
 
 void printLLMat( vector<long long int> matA, int mat_width, int mat_height){
 	
-	for(int index = 0; index < mat_width; index++){
-		for(int jndex = 0; jndex < mat_height; jndex++){
+	for(int index = 0; index < mat_height; index++){
+		for(int jndex = 0; jndex < mat_width; jndex++){
 			printf("%lld ", matA[index * mat_width + jndex]);
 		}
 		printf("\n");
