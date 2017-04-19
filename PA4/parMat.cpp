@@ -128,9 +128,9 @@ int main(int argc, char *argv[])
 			disp_height = disp_width;
 			
 			//receive matrices
-			MPI_Recv(&rowRange[0], 2, MPI_INT, index, 10, MPI_COMM_WORLD, &status);
-			MPI_Recv(&subA[0], rowRange[0] * disp_width, MPI_INT, index, 11, MPI_COMM_WORLD, &status);
-			MPI_Recv(&subB[0], rowRange[0] * disp_width, MPI_INT, index, 12, MPI_COMM_WORLD, &status);
+			MPI_Recv(&rowRange[0], 2, MPI_INT, 0, 10, MPI_COMM_WORLD, &status);
+			MPI_Recv(&subA[0], rowRange[0] * disp_width, MPI_INT, 0, 11, MPI_COMM_WORLD, &status);
+			MPI_Recv(&subB[0], rowRange[0] * disp_width, MPI_INT, 0, 12, MPI_COMM_WORLD, &status);
 			
 			//perform timed operation
 			timedOperation( subA, subB, subR, rowRange, disp_width, numTasks, taskid, temp);
@@ -189,12 +189,12 @@ void timedOperation( vector< int > subA, vector< int > &subB, vector< long long 
 		for(index = 0; index < numTasks; index++){
 			
 			if( index == taskid){
-				MPI_Send(&tempRange[0], 2, MPI_INT, (index + 1) % numTasks, 10, MPI_COMM_WORLD);
-				MPI_Send(&temp[0], tempRange[0] * disp_width, MPI_INT, (index + 1) % numTasks, 11, MPI_COMM_WORLD);
+				MPI_Send(&tempRange[0], 2, MPI_INT, (index + 1) % numTasks, 13, MPI_COMM_WORLD);
+				MPI_Send(&temp[0], tempRange[0] * disp_width, MPI_INT, (index + 1) % numTasks, 14, MPI_COMM_WORLD);
 			}
 			else if( ((index + 1) % numTasks) == taskid){
-				MPI_Recv(&colRange[0], 2, MPI_INT, index, 10, MPI_COMM_WORLD, &status);
-				MPI_Recv(&subB[0], colRange[0] * disp_width, MPI_INT, index, 11, MPI_COMM_WORLD, &status);						
+				MPI_Recv(&colRange[0], 2, MPI_INT, index, 13, MPI_COMM_WORLD, &status);
+				MPI_Recv(&subB[0], colRange[0] * disp_width, MPI_INT, index, 14, MPI_COMM_WORLD, &status);						
 			}
 			
 			MPI_Barrier(MPI_COMM_WORLD);
