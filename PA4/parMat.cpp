@@ -132,7 +132,8 @@ int main(int argc, char *argv[])
 				}
 				if(MASTER == taskid)
 					printLLMat(subR,disp_width, rowRange[0]);
-				
+
+				printf("\n\n\n");
 				MPI_Barrier(MPI_COMM_WORLD);
 			
 			//calculate elapsed time and output
@@ -244,6 +245,7 @@ void printMat( vector<int> matA, int mat_width){
 		}
 		printf("\n");
 	}
+	printf("\n\n\n");
 }
 
 void printLLMat( vector<long long int> matA, int mat_width, int mat_height){
@@ -254,5 +256,4 @@ void printLLMat( vector<long long int> matA, int mat_width, int mat_height){
 		}
 		printf("\n");
 	}
-	printf("\n");
 }
