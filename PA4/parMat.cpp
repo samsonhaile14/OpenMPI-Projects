@@ -14,6 +14,8 @@ using namespace std;
 void transpose(vector< int > &matB, long long int max_width);
 void timedOperation( vector< int > subA, vector< int > &subB, vector< long long int > &subR, int rowRange[],
 					 long long int disp_width, int numTasks, int taskid, vector<int> &temp);
+void printMat( vector<int> matA, int mat_width);					 
+void printLLMat( vector<long long int> matA, int mat_width, int mat_height);s
 
 //main program
 int main(int argc, char *argv[])
@@ -68,13 +70,17 @@ int main(int argc, char *argv[])
 			disp_height = disp_width;
 			vector<int> datSubA(disp_width * disp_height);
 			vector<int> datSubB(disp_width * disp_height);
-			
+						
 			//copy main array to data sub array for contiguous access
 			for( index = 0; index < disp_height; index++){
 				copy(matA.begin() + (index * max_width), matA.begin() + (index * max_width) + disp_width, datSubA.begin() + disp_width * index );
 				copy(matB.begin() + (index * max_width), matB.begin() + (index * max_width) + disp_width, datSubB.begin() + disp_width * index );
 			}
 
+			//for testing correctness
+				printMat(matA,disp_width);
+				printMat(matB,disp_width);
+			
 			int rowDivTasks = disp_height/numTasks;
 			int rowModTasks = disp_height%numTasks;
 			long long int pos = 0;
@@ -117,6 +123,17 @@ int main(int argc, char *argv[])
 			//end timer
 			MPI_Barrier(MPI_COMM_WORLD);
 			double end = MPI_Wtime();
+
+			//for testing correctness
+				for(index = 1; index < numTasks; index++){
+					if(index == taskid)
+						printLLMat(subR,disp_width, rowRange[0]);
+					MPI_Barrier(MPI_COMM_WORLD);
+				}
+				if(MASTER == taskid)
+					printLLMat(subR,disp_width, rowRange[0]);
+				
+				MPI_Barrier(MPI_COMM_WORLD);
 			
 			//calculate elapsed time and output
 			printf("%d, %f\n", disp_width, end - start);
@@ -130,7 +147,6 @@ int main(int argc, char *argv[])
 			disp_height = disp_width;
 			
 			//receive matrices
-			printf("size:%d", subA.size());
 			MPI_Recv(&rowRange[0], 2, MPI_INT, 0, 10, MPI_COMM_WORLD, &status);
 			MPI_Recv(&subA[0], rowRange[0] * disp_width, MPI_INT, 0, 11, MPI_COMM_WORLD, &status);
 			MPI_Recv(&subB[0], rowRange[0] * disp_width, MPI_INT, 0, 12, MPI_COMM_WORLD, &status);
@@ -139,7 +155,18 @@ int main(int argc, char *argv[])
 			timedOperation( subA, subB, subR, rowRange, disp_width, numTasks, taskid, temp);
 			
 			MPI_Barrier(MPI_COMM_WORLD);
-	
+
+			//for testing correctness
+				for(index = 1; index < numTasks; index++){
+					if(index == taskid)
+						printLLMat(subR,disp_width, rowRange[0]);
+					MPI_Barrier(MPI_COMM_WORLD);
+				}
+				if(MASTER == taskid)
+					printLLMat(subR,disp_width, rowRange[0]);
+
+				MPI_Barrier(MPI_COMM_WORLD);
+			
 		}
 	}
 
@@ -207,4 +234,25 @@ void timedOperation( vector< int > subA, vector< int > &subB, vector< long long 
 				
 	}
 	
+}
+
+void printMat( vector<int> matA, int mat_width){
+	
+	for(int index = 0; index < mat_width; index++){
+		for(int jndex = 0; jndex < mat_width; jndex++){
+			printf("%d ", matA[index * mat_width + jndex]);
+		}
+		printf("\n");
+	}
+}
+
+void printLLMat( vector<long long int> matA, int mat_width, int mat_height){
+	
+	for(int index = 0; index < mat_width; index++){
+		for(int jndex = 0; jndex < mat_height; jndex++){
+			printf("%lld ", matA[index * mat_width + jndex]);
+		}
+		printf("\n");
+	}
+	printf("\n");
 }
