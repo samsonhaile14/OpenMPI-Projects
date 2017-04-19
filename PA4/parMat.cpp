@@ -204,11 +204,11 @@ void timedOperation( vector< int > subA, vector< int > &subB, vector< long long 
 	//Perform timed operation
 	for( int tIndex = 0; tIndex < numTasks - 1; tIndex++){
 		//Multiply Matrices (storing results in subR)
-		for(index = rowRange[1]; index < rowRange[1] + rowRange[0]; index++){
-			for(jndex = colRange[1]; jndex < colRange[1] + colRange[0]; jndex++){
-				subR[((index-rowRange[1]) * disp_width) + jndex] = 0;
+		for(index = 0; index < rowRange[0]; index++){
+			for(jndex = 0; jndex < colRange[0]; jndex++){
+				subR[((index+rowRange[1]) * disp_width) + (jndex+colRange[1])] = 0;
 				for(kndex = 0; kndex < disp_width; kndex++){
-					subR[	((index-rowRange[1]) * disp_width) + jndex	] += 
+					subR[((index+rowRange[1]) * disp_width) + (jndex+colRange[1])] += 
 						(long long int) subA[index * disp_width + kndex] * (long long int) subB[jndex * disp_width + kndex];
 				}
 			}
