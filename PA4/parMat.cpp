@@ -22,10 +22,10 @@ int maint(int argc, char *argv[])
 	int max_width, max_height,disp_width,disp_height;
 	int numTasks, taskid;	
 	
-	vector< int > subA( (max_width * ((max_height / numTasks) + 1), 0);
-	vector< int > subB( (max_width * ((max_height / numTasks) + 1), 0);
-	vector< long long int > subR( (max_width * ((max_height / numTasks) + 1), 0);
-	vector< int > temp((max_width * ((max_height / numTasks) + 1), 0)
+	vector< int > subA( (max_width * ((max_height / numTasks) + 1), 0));
+	vector< int > subB( (max_width * ((max_height / numTasks) + 1), 0));
+	vector< long long int > subR( (max_width * ((max_height / numTasks) + 1), 0));
+	vector< int > temp((max_width * ((max_height / numTasks) + 1), 0));
 
 	if(argc < 1){
 		return 1;
