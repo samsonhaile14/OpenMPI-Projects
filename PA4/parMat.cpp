@@ -171,8 +171,8 @@ int maint(int argc, char *argv[])
 			
 			//receive matrices
 			MPI_Recv(&rowRange[0], 2, MPI_INT, index, 10, MPI_COMM_WORLD, &status);
-			MPI_Recv(&subA[pos], rowRange[0] * disp_width, MPI_INT, index, 11, MPI_COMM_WORLD, &status);
-			MPI_Recv(&subB[pos], rowRange[0] * disp_width, MPI_INT, index, 12, MPI_COMM_WORLD, &status);
+			MPI_Recv(&subA[0], rowRange[0] * disp_width, MPI_INT, index, 11, MPI_COMM_WORLD, &status);
+			MPI_Recv(&subB[0], rowRange[0] * disp_width, MPI_INT, index, 12, MPI_COMM_WORLD, &status);
 			
 			int colRange[] = {rowRange[0], rowRange[1]};	//element 0 : column size
 															//element 1 : column start
