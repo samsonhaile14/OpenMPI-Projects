@@ -119,28 +119,47 @@ int main(int argc, char *argv[])
 				
 			for(int kndex = 1; kndex < numTasks; kndex++){
 
-			if(kndex == taskid){
-				for(index = 0; index < rowRange[0];index++){
-					for(jndex = 0; jndex < disp_width;jndex++){
-						printf("%d ", subA[index * disp_width + jndex]);
+				if(kndex == taskid){
+					for(index = 0; index < rowRange[0];index++){
+						for(jndex = 0; jndex < disp_width;jndex++){
+							printf("%d ", subA[index * disp_width + jndex]);
+						}
+					printf("\n");
 					}
-				printf("\n");
 				}
-			}
-			printf("\n\n\n");
+				printf("\n\n\n");
 
-			if(kndex == taskid){
-				for(index = 0; index < rowRange[0];index++){
-					for(jndex = 0; jndex < disp_width;jndex++){
-						printf("%d ", subB[index * disp_width + jndex]);
+				if(kndex == taskid){
+					for(index = 0; index < rowRange[0];index++){
+						for(jndex = 0; jndex < disp_width;jndex++){
+							printf("%d ", subB[index * disp_width + jndex]);
+						}
+					printf("\n");
 					}
-				printf("\n");
 				}
-			}
-			printf("\n\n\n");
+				printf("\n\n\n");
 			
 			MPI_Barrier(MPI_COMM_WORLD);
 			}
+				if(MASTER == taskid){
+					for(index = 0; index < rowRange[0];index++){
+						for(jndex = 0; jndex < disp_width;jndex++){
+							printf("%d ", subA[index * disp_width + jndex]);
+						}
+					printf("\n");
+					}
+				}
+				printf("\n");
+				
+				if(MASTER == taskid){
+					for(index = 0; index < rowRange[0];index++){
+						for(jndex = 0; jndex < disp_width;jndex++){
+							printf("%d ", subB[index * disp_width + jndex]);
+						}
+					printf("\n");
+					}
+				}
+				printf("\n\n\n");
 				
 			//start timer
 			double start = MPI_Wtime();
@@ -182,6 +201,31 @@ int main(int argc, char *argv[])
 			
 			//Ensure all calculations happen at the same time
 			MPI_Barrier(MPI_COMM_WORLD);
+			
+			for(int kndex = 1; kndex < numTasks; kndex++){
+
+				if(kndex == taskid){
+					for(index = 0; index < rowRange[0];index++){
+						for(jndex = 0; jndex < disp_width;jndex++){
+							printf("%d ", subA[index * disp_width + jndex]);
+						}
+					printf("\n");
+					}
+				}
+				printf("\n");
+				
+				if(kndex == taskid){
+					for(index = 0; index < rowRange[0];index++){
+						for(jndex = 0; jndex < disp_width;jndex++){
+							printf("%d ", subB[index * disp_width + jndex]);
+						}
+					printf("\n");
+					}
+				}
+				printf("\n\n\n");
+			
+			MPI_Barrier(MPI_COMM_WORLD);
+			}
 			
 			//perform timed operation
 			timedOperation( subA, subB, subR, rowRange, disp_width, numTasks, taskid, temp);
