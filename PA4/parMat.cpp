@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 				copy(matA.begin() + (index * max_width), matA.begin() + (index * max_width) + disp_width, datSubA.begin() + disp_width * index );
 				copy(matB.begin() + (index * max_width), matB.begin() + (index * max_width) + disp_width, datSubB.begin() + disp_width * index );
 			}
-
+/*
 			//for testing correctness
 				printMat(matA,disp_width);
 				printMat(matB,disp_width);
@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
 				rowRange[1] += rowRange[0];
 				
 			}
-			MPI_Finalize();
+*/			MPI_Finalize();
 			return 0;
 			
 			//implicitly assign master node rows to process (use matrix from matA/B[pos] onwards)
@@ -150,12 +150,12 @@ int main(int argc, char *argv[])
 	else{
 		for(disp_width = max_width; disp_width <= max_width; disp_width += max_width / 5){
 			disp_height = disp_width;
-			
+/*			
 			//receive matrices
 			MPI_Recv(&rowRange[0], 2, MPI_INT, 0, 10, MPI_COMM_WORLD, &status);
 			MPI_Recv(&subA[0], rowRange[0] * disp_width, MPI_INT, 0, 11, MPI_COMM_WORLD, &status);
 			MPI_Recv(&subB[0], rowRange[0] * disp_width, MPI_INT, 0, 12, MPI_COMM_WORLD, &status);
-
+*/
 			MPI_Finalize();
 			return 0;
 			
