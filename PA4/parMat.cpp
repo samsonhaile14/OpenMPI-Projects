@@ -105,10 +105,15 @@ int maint(int argc, char *argv[])
 			copy( datSubA.begin() + pos, datSubA.begin() + pos + rowRange[0] * disp_width, subA.begin() );
 			copy( datSubB.begin() + pos, datSubB.begin() + pos + rowRange[0] * disp_width, subB.begin() );
 							
+			int colRange[] = {rowRange[0], rowRange[1]};	//element 0 : column size
+															//element 1 : column start
+
 			//start timer
 			double start = MPI_Wtime();
 			int tIndex = 0;
 
+			
+			
 			//Perform timed operation
 			for( tIndex = 0; tIndex < numTasks - 1; tIndex++){
 				//Multiply Matrices (storing results in subR)
