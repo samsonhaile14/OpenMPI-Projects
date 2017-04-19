@@ -13,7 +13,7 @@ using namespace std;
 //function prototypes
 void transpose(vector< int > &matB, long long int max_width);
 void timedOperation( vector< int > subA, vector< int > &subB, vector< long long int > &subR, int rowRange[],
-					 int disp_width, int numTasks, int taskid, vector<int> &temp);
+					 long long int disp_width, int numTasks, int taskid, vector<int> &temp);
 
 //main program
 int main(int argc, char *argv[])
@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 
 	//variables
 	long long int index, jndex, kndex;
-	int max_width, max_height,disp_width,disp_height;
+	long long int max_width, max_height,disp_width,disp_height;
 	int numTasks, taskid;
 
 	MPI_Status status;
@@ -37,10 +37,10 @@ int main(int argc, char *argv[])
 	max_width = max_height = atoll(argv[1]);
 
 	//create and allocate memory for vectors
-	vector< int > subA( (max_width * ((max_height / numTasks) + 1), 0));
-	vector< int > subB( (max_width * ((max_height / numTasks) + 1), 0));
-	vector< long long int > subR( (max_width * ((max_height / numTasks) + 1), 0));
-	vector< int > temp((max_width * ((max_height / numTasks) + 1), 0));
+	vector< int > subA( max_width * ((max_height / numTasks) + 1), 0);
+	vector< int > subB( max_width * ((max_height / numTasks) + 1), 0);
+	vector< long long int > subR( max_width * ((max_height / numTasks) + 1), 0);
+	vector< int > temp(max_width * ((max_height / numTasks) + 1), 0);
 
 
 	//initialization
@@ -130,6 +130,7 @@ int main(int argc, char *argv[])
 			disp_height = disp_width;
 			
 			//receive matrices
+			printf("size:%d", subA.size());
 			MPI_Recv(&rowRange[0], 2, MPI_INT, 0, 10, MPI_COMM_WORLD, &status);
 			MPI_Recv(&subA[0], rowRange[0] * disp_width, MPI_INT, 0, 11, MPI_COMM_WORLD, &status);
 			MPI_Recv(&subB[0], rowRange[0] * disp_width, MPI_INT, 0, 12, MPI_COMM_WORLD, &status);
@@ -162,7 +163,7 @@ void transpose(vector< int > &matB, long long int max_width){
 }
 
 void timedOperation( vector< int > subA, vector< int > &subB, vector< long long int > &subR, int rowRange[],
-					 int disp_width, int numTasks, int taskid, vector<int> &temp){
+					 long long int disp_width, int numTasks, int taskid, vector<int> &temp){
 	
 	int index,jndex,kndex;
 	MPI_Status status;
