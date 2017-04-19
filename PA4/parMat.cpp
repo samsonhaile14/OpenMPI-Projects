@@ -26,11 +26,6 @@ int main(int argc, char *argv[])
 
 	MPI_Status status;
 	
-	vector< int > subA( (max_width * ((max_height / numTasks) + 1), 0));
-	vector< int > subB( (max_width * ((max_height / numTasks) + 1), 0));
-	vector< long long int > subR( (max_width * ((max_height / numTasks) + 1), 0));
-	vector< int > temp((max_width * ((max_height / numTasks) + 1), 0));
-
 	int rowRange[2];			//element 0: row/col size
 								//element 1: row/col start
 	
@@ -40,6 +35,13 @@ int main(int argc, char *argv[])
 	}
 	
 	max_width = max_height = atoll(argv[1]);
+
+	//create and allocate memory for vectors
+	vector< int > subA( (max_width * ((max_height / numTasks) + 1), 0));
+	vector< int > subB( (max_width * ((max_height / numTasks) + 1), 0));
+	vector< long long int > subR( (max_width * ((max_height / numTasks) + 1), 0));
+	vector< int > temp((max_width * ((max_height / numTasks) + 1), 0));
+
 
 	//initialization
 	MPI_Init(&argc, &argv);
