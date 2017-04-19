@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 			int rowModTasks = disp_height%numTasks;
 			long long int pos = 0;
 			rowRange[1] = pos;
-/*			
+			
 			//distribute rows to each process
 			for(index = 1; index < numTasks; index++){
 				//determine number of rows given to process
@@ -104,13 +104,13 @@ int main(int argc, char *argv[])
 				rowRange[1] += rowRange[0];
 				
 			}
-*/			MPI_Finalize();
+			MPI_Finalize();
 			return 0;
 /*	
 			//implicitly assign master node rows to process (use matrix from matA/B[pos] onwards)
 				//determine number of rows given to process
 				rowRange[0] = rowDivTasks;
-				if(index <rowModTasks){
+				if(MASTER <rowModTasks){
 					rowRange[0]++;
 				}
 				copy( datSubA.begin() + pos, datSubA.begin() + pos + rowRange[0] * disp_width, subA.begin() );
@@ -150,12 +150,12 @@ int main(int argc, char *argv[])
 	else{
 		for(disp_width = max_width; disp_width <= max_width; disp_width += max_width / 5){
 			disp_height = disp_width;
-/*			
+			
 			//receive matrices
 			MPI_Recv(&rowRange[0], 2, MPI_INT, 0, 10, MPI_COMM_WORLD, &status);
 			MPI_Recv(&subA[0], rowRange[0] * disp_width, MPI_INT, 0, 11, MPI_COMM_WORLD, &status);
 			MPI_Recv(&subB[0], rowRange[0] * disp_width, MPI_INT, 0, 12, MPI_COMM_WORLD, &status);
-*/
+
 			MPI_Finalize();
 			return 0;
 			
