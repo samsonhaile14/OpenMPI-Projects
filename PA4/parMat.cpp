@@ -114,6 +114,34 @@ int main(int argc, char *argv[])
 				copy( datSubA.begin() + pos, datSubA.begin() + pos + rowRange[0] * disp_width, subA.begin() );
 				copy( datSubB.begin() + pos, datSubB.begin() + pos + rowRange[0] * disp_width, subB.begin() );
 
+			//Ensure all calculations happen at the same time
+			MPI_Barrier(MPI_COMM_WORLD);				
+				
+			for(int kndex = 1; kndex < numTasks; kndex++){
+
+			if(kndex == taskid){
+				for(index = 0; index < rowRange[0];index++){
+					for(jndex = 0; jndex < disp_width;jndex++){
+						printf("%d ", subA[index * disp_width + jndex]);
+					}
+				printf("\n");
+				}
+			}
+			printf("\n\n\n");
+
+			if(kndex == taskid){
+				for(index = 0; index < rowRange[0];index++){
+					for(jndex = 0; jndex < disp_width;jndex++){
+						printf("%d ", subB[index * disp_width + jndex]);
+					}
+				printf("\n");
+				}
+			}
+			printf("\n\n\n");
+			
+			MPI_Barrier(MPI_COMM_WORLD);
+			}
+				
 			//start timer
 			double start = MPI_Wtime();
 								
@@ -137,7 +165,7 @@ int main(int argc, char *argv[])
 				MPI_Barrier(MPI_COMM_WORLD);
 			
 			//calculate elapsed time and output
-			printf("%d, %f\n", disp_width, end - start);
+			printf("%lld, %f\n", disp_width, end - start);
 
 		}
 	}
@@ -151,6 +179,9 @@ int main(int argc, char *argv[])
 			MPI_Recv(&rowRange[0], 2, MPI_INT, 0, 10, MPI_COMM_WORLD, &status);
 			MPI_Recv(&subA[0], rowRange[0] * disp_width, MPI_INT, 0, 11, MPI_COMM_WORLD, &status);
 			MPI_Recv(&subB[0], rowRange[0] * disp_width, MPI_INT, 0, 12, MPI_COMM_WORLD, &status);
+			
+			//Ensure all calculations happen at the same time
+			MPI_Barrier(MPI_COMM_WORLD);
 			
 			//perform timed operation
 			timedOperation( subA, subB, subR, rowRange, disp_width, numTasks, taskid, temp);
@@ -219,6 +250,7 @@ void timedOperation( vector< int > subA, vector< int > &subB, vector< long long 
 
 		int tempRange[] = {colRange[0], colRange[1]};
 		
+		//Pass around columns of matrix B
 		for(index = 0; index < numTasks; index++){
 			
 			if( index == taskid){
