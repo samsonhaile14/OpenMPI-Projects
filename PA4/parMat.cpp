@@ -206,9 +206,9 @@ void timedOperation( vector< int > subA, vector< int > &subB, vector< long long 
 		//Multiply Matrices (storing results in subR)
 		for(index = 0; index < rowRange[0]; index++){
 			for(jndex = 0; jndex < colRange[0]; jndex++){
-				subR[((index+rowRange[1]) * disp_width) + (jndex+colRange[1])] = 0;
+				subR[((index) * disp_width) + (jndex+colRange[1])] = 0;
 				for(kndex = 0; kndex < disp_width; kndex++){
-					subR[((index+rowRange[1]) * disp_width) + (jndex+colRange[1])] += 
+					subR[((index) * disp_width) + (jndex+colRange[1])] += 
 						(long long int) subA[index * disp_width + kndex] * (long long int) subB[jndex * disp_width + kndex];
 				}
 			}
