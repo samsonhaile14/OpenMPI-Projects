@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
 			}
 */			MPI_Finalize();
 			return 0;
-			
+/*	
 			//implicitly assign master node rows to process (use matrix from matA/B[pos] onwards)
 				//determine number of rows given to process
 				rowRange[0] = rowDivTasks;
@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
 				}
 				copy( datSubA.begin() + pos, datSubA.begin() + pos + rowRange[0] * disp_width, subA.begin() );
 				copy( datSubB.begin() + pos, datSubB.begin() + pos + rowRange[0] * disp_width, subB.begin() );
-
+*/
 			//Ensure all calculations happen at the same time
 			MPI_Barrier(MPI_COMM_WORLD);				
 			//start timer
