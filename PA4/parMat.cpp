@@ -12,6 +12,7 @@ using namespace std;
 
 //function prototypes
 void transpose(vector< int > &matB, long long int max_width);
+void timedOperation( vector< int > &subA, vector< int > subB, vector<long long int> subR vector< long long int > &subR, int rowRange[], int disp_width);
 
 //main program
 int maint(int argc, char *argv[])
@@ -101,59 +102,12 @@ int maint(int argc, char *argv[])
 				if(index <rowModTasks){
 					rowRange[0]++;
 				}
+				copy( datSubA.begin() + pos, datSubA.begin() + pos + rowRange[0] * disp_width, subA.begin() );
+				copy( datSubB.begin() + pos, datSubB.begin() + pos + rowRange[0] * disp_width, subB.begin() );
 
-			copy( datSubA.begin() + pos, datSubA.begin() + pos + rowRange[0] * disp_width, subA.begin() );
-			copy( datSubB.begin() + pos, datSubB.begin() + pos + rowRange[0] * disp_width, subB.begin() );
-							
-			int colRange[] = {rowRange[0], rowRange[1]};	//element 0 : column size
-															//element 1 : column start
-
-			//start timer
-			double start = MPI_Wtime();
-			
-			//Perform timed operation
-			for( int tIndex = 0; tIndex < numTasks - 1; tIndex++){
-				//Multiply Matrices (storing results in subR)
-				for(index = rowRange[1]; index < rowRange[1] + rowRange[0]; index++){
-					for(jndex = colRange[1]; jndex < colRange[1] + colRange[0]; jndex++){
-						subR[((index-rowRange[1]) * disp_width) + jndex] = 0;
-						for(kndex = 0; kndex < disp_width; kndex++){
-							subR[	((index-rowRange[1]) * disp_width) + jndex	] += 
-								(long long int) subA[index * disp_width + kndex] * (long long int) subB[jndex * disp_width + kndex];
-						}
-					}
-				}
+			//perform timed operation
+			timedOperation(subA,subB,subR,rowRange,disp_width);
 				
-				//Send matrix B rows to next process and receive from process
-				copy( subB.begin(), subB.begin() + colRange[0] * disp_width, temp.begin() );
-
-				int tempRange[] = {colRange[0], colRange[1]};
-				
-				for(index = 0; index < numTasks; index++){
-					
-					if( index == taskid){
-						MPI_Send(&tempRange[0], 2, MPI_INT, (index + 1) % numTasks, 10, MPI_COMM_WORLD);
-						MPI_Send(&temp[0], tempRange[0] * disp_width, MPI_INT, (index + 1) % numTasks, 11, MPI_COMM_WORLD);
-					}
-					else if( ((index + 1) % numTasks) == taskid){
-						MPI_Recv(&colRange[0], 2, MPI_INT, index, 10, MPI_COMM_WORLD, &status);
-						MPI_Recv(&subB[0], colRange[0] * disp_width, MPI_INT, index, 11, MPI_COMM_WORLD, &status);						
-					}
-					
-					MPI_Barrier(MPI_COMM_WORLD);
-				}
-			
-			//matrix multiply
-			/*for(index = 0; index < disp_width; index++){
-				for(jndex = 0; jndex < disp_height; jndex++){
-					for(kndex = 0; kndex < disp_width; kndex++){
-						result[index][jndex] += matA[index][kndex] * matB[kndex][jndex];
-					}
-				}
-			}
-			*/
-			
-			}
 			//end timer
 			MPI_Barrier(MPI_COMM_WORLD);
 			double end = MPI_Wtime();
@@ -174,42 +128,9 @@ int maint(int argc, char *argv[])
 			MPI_Recv(&subA[0], rowRange[0] * disp_width, MPI_INT, index, 11, MPI_COMM_WORLD, &status);
 			MPI_Recv(&subB[0], rowRange[0] * disp_width, MPI_INT, index, 12, MPI_COMM_WORLD, &status);
 			
-			int colRange[] = {rowRange[0], rowRange[1]};	//element 0 : column size
-															//element 1 : column start
-	
-			//Perform timed operation
-			for( int tIndex = 0; tIndex < numTasks - 1; tIndex++){
-				//Multiply Matrices (storing results in subR)
-				for(index = rowRange[1]; index < rowRange[1] + rowRange[0]; index++){
-					for(jndex = colRange[1]; jndex < colRange[1] + colRange[0]; jndex++){
-						subR[((index-rowRange[1]) * disp_width) + jndex] = 0;
-						for(kndex = 0; kndex < disp_width; kndex++){
-							subR[	((index-rowRange[1]) * disp_width) + jndex	] += 
-								(long long int) subA[index * disp_width + kndex] * (long long int) subB[jndex * disp_width + kndex];
-						}
-					}
-				}
-				
-				//Send matrix B rows to next process and receive from process
-				copy( subB.begin(), subB.begin() + colRange[0] * disp_width, temp.begin() );
+			//perform timed operation
+			timedOperation(subA,subB,subR,rowRange,disp_width);
 
-				int tempRange[] = {colRange[0], colRange[1]};
-				
-				for(index = 0; index < numTasks; index++){
-					
-					if( index == taskid){
-						MPI_Send(&tempRange[0], 2, MPI_INT, (index + 1) % numTasks, 10, MPI_COMM_WORLD);
-						MPI_Send(&temp[0], tempRange[0] * disp_width, MPI_INT, (index + 1) % numTasks, 11, MPI_COMM_WORLD);
-					}
-					else if( ((index + 1) % numTasks) == taskid){
-						MPI_Recv(&colRange[0], 2, MPI_INT, index, 10, MPI_COMM_WORLD, &status);
-						MPI_Recv(&subB[0], colRange[0] * disp_width, MPI_INT, index, 11, MPI_COMM_WORLD, &status);						
-					}
-					
-					MPI_Barrier(MPI_COMM_WORLD);
-				}
-						
-			}
 	
 		}
 	}
@@ -231,6 +152,50 @@ void transpose(vector< int > &matB, long long int max_width){
 			matB[index * max_width + jndex] = matB[jndex * max_width + index];
 			matB[jndex * max_width + index] = temp;
 		}
+	}
+	
+}
+
+void timedOperation( vector< int > &subA, vector< int > subB, vector<long long int> subR, vector< long long int > &subR, int rowRange[], int disp_width){
+	
+	int colRange[] = {rowRange[0], rowRange[1]};	//element 0 : column size
+													//element 1 : column start
+
+	//start timer
+	double start = MPI_Wtime();
+	
+	//Perform timed operation
+	for( int tIndex = 0; tIndex < numTasks - 1; tIndex++){
+		//Multiply Matrices (storing results in subR)
+		for(index = rowRange[1]; index < rowRange[1] + rowRange[0]; index++){
+			for(jndex = colRange[1]; jndex < colRange[1] + colRange[0]; jndex++){
+				subR[((index-rowRange[1]) * disp_width) + jndex] = 0;
+				for(kndex = 0; kndex < disp_width; kndex++){
+					subR[	((index-rowRange[1]) * disp_width) + jndex	] += 
+						(long long int) subA[index * disp_width + kndex] * (long long int) subB[jndex * disp_width + kndex];
+				}
+			}
+		}
+		
+		//Send matrix B rows to next process and receive from process
+		copy( subB.begin(), subB.begin() + colRange[0] * disp_width, temp.begin() );
+
+		int tempRange[] = {colRange[0], colRange[1]};
+		
+		for(index = 0; index < numTasks; index++){
+			
+			if( index == taskid){
+				MPI_Send(&tempRange[0], 2, MPI_INT, (index + 1) % numTasks, 10, MPI_COMM_WORLD);
+				MPI_Send(&temp[0], tempRange[0] * disp_width, MPI_INT, (index + 1) % numTasks, 11, MPI_COMM_WORLD);
+			}
+			else if( ((index + 1) % numTasks) == taskid){
+				MPI_Recv(&colRange[0], 2, MPI_INT, index, 10, MPI_COMM_WORLD, &status);
+				MPI_Recv(&subB[0], colRange[0] * disp_width, MPI_INT, index, 11, MPI_COMM_WORLD, &status);						
+			}
+			
+			MPI_Barrier(MPI_COMM_WORLD);
+		}
+				
 	}
 	
 }
