@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 				copy(matA.begin() + (index * max_width), matA.begin() + (index * max_width) + disp_width, datSubA.begin() + disp_width * index );
 				copy(matB.begin() + (index * max_width), matB.begin() + (index * max_width) + disp_width, datSubB.begin() + disp_width * index );
 			}
-/*
+
 			//for testing correctness
 				printMat(matA,disp_width);
 				printMat(matB,disp_width);
@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 			int rowModTasks = disp_height%numTasks;
 			long long int pos = 0;
 			rowRange[1] = pos;
-			
+/*			
 			//distribute rows to each process
 			for(index = 1; index < numTasks; index++){
 				//determine number of rows given to process
