@@ -110,19 +110,16 @@ int maint(int argc, char *argv[])
 
 			//start timer
 			double start = MPI_Wtime();
-			int tIndex = 0;
-
-			
 			
 			//Perform timed operation
-			for( tIndex = 0; tIndex < numTasks - 1; tIndex++){
+			for( int tIndex = 0; tIndex < numTasks - 1; tIndex++){
 				//Multiply Matrices (storing results in subR)
 				for(index = rowRange[1]; index < rowRange[1] + rowRange[0]; index++){
 					for(jndex = colRange[1]; jndex < colRange[1] + colRange[0]; jndex++){
 						subR[((index-rowRange[1]) * disp_width) + jndex] = 0;
 						for(kndex = 0; kndex < disp_width; kndex++){
 							subR[	((index-rowRange[1]) * disp_width) + jndex	] += 
-								(long long int) datSubA[index * disp_width + kndex] * (long long int) datSubB[jndex * disp_width + kndex];
+								(long long int) subA[index * disp_width + kndex] * (long long int) subB[jndex * disp_width + kndex];
 						}
 					}
 				}
@@ -173,22 +170,22 @@ int maint(int argc, char *argv[])
 			disp_height = disp_width;
 			
 			//receive matrices
-			MPI_Recv(&rowRange[0], 2, MPI_INT, index, 10, MPI_COMM_WORLD);
-			MPI_Recv(&subA[pos], rowRange[0] * disp_width, MPI_INT, index, 11, MPI_COMM_WORLD);
-			MPI_Recv(&subB[pos], rowRange[0] * disp_width, MPI_INT, index, 12, MPI_COMM_WORLD);
+			MPI_Recv(&rowRange[0], 2, MPI_INT, index, 10, MPI_COMM_WORLD, &status);
+			MPI_Recv(&subA[pos], rowRange[0] * disp_width, MPI_INT, index, 11, MPI_COMM_WORLD, &status);
+			MPI_Recv(&subB[pos], rowRange[0] * disp_width, MPI_INT, index, 12, MPI_COMM_WORLD, &status);
 			
 			int colRange[] = {rowRange[0], rowRange[1]};	//element 0 : column size
 															//element 1 : column start
 	
 			//Perform timed operation
-			for( tIndex = 0; tIndex < numTasks - 1; tIndex++){
+			for( int tIndex = 0; tIndex < numTasks - 1; tIndex++){
 				//Multiply Matrices (storing results in subR)
 				for(index = rowRange[1]; index < rowRange[1] + rowRange[0]; index++){
 					for(jndex = colRange[1]; jndex < colRange[1] + colRange[0]; jndex++){
 						subR[((index-rowRange[1]) * disp_width) + jndex] = 0;
 						for(kndex = 0; kndex < disp_width; kndex++){
 							subR[	((index-rowRange[1]) * disp_width) + jndex	] += 
-								(long long int) datSubA[index * disp_width + kndex] * (long long int) datSubB[jndex * disp_width + kndex];
+								(long long int) subA[index * disp_width + kndex] * (long long int) subB[jndex * disp_width + kndex];
 						}
 					}
 				}
