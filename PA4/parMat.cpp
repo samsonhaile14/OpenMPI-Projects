@@ -116,51 +116,8 @@ int main(int argc, char *argv[])
 
 			//Ensure all calculations happen at the same time
 			MPI_Barrier(MPI_COMM_WORLD);				
-				
-			for(int kndex = 1; kndex < numTasks; kndex++){
-
-				if(kndex == taskid){
-					for(index = 0; index < rowRange[0];index++){
-						for(jndex = 0; jndex < disp_width;jndex++){
-							printf("%d ", subA[index * disp_width + jndex]);
-						}
-					printf("\n");
-					}
-				}
-				printf("\n\n\n");
-
-				if(kndex == taskid){
-					for(index = 0; index < rowRange[0];index++){
-						for(jndex = 0; jndex < disp_width;jndex++){
-							printf("%d ", subB[index * disp_width + jndex]);
-						}
-					printf("\n");
-					}
-				}
-				printf("\n\n\n");
-			
-			MPI_Barrier(MPI_COMM_WORLD);
-			}
-				if(MASTER == taskid){
-					for(index = 0; index < rowRange[0];index++){
-						for(jndex = 0; jndex < disp_width;jndex++){
-							printf("%d ", subA[index * disp_width + jndex]);
-						}
-					printf("\n");
-					}
-				}
-				printf("\n");
-				
-				if(MASTER == taskid){
-					for(index = 0; index < rowRange[0];index++){
-						for(jndex = 0; jndex < disp_width;jndex++){
-							printf("%d ", subB[index * disp_width + jndex]);
-						}
-					printf("\n");
-					}
-				}
-				printf("\n\n\n");
-				
+			MPI_Finalize();
+			return 0;
 			//start timer
 			double start = MPI_Wtime();
 								
@@ -201,32 +158,8 @@ int main(int argc, char *argv[])
 			
 			//Ensure all calculations happen at the same time
 			MPI_Barrier(MPI_COMM_WORLD);
-			
-			for(int kndex = 1; kndex < numTasks; kndex++){
-
-				if(kndex == taskid){
-					for(index = 0; index < rowRange[0];index++){
-						for(jndex = 0; jndex < disp_width;jndex++){
-							printf("%d ", subA[index * disp_width + jndex]);
-						}
-					printf("\n");
-					}
-				}
-				printf("\n");
-				
-				if(kndex == taskid){
-					for(index = 0; index < rowRange[0];index++){
-						for(jndex = 0; jndex < disp_width;jndex++){
-							printf("%d ", subB[index * disp_width + jndex]);
-						}
-					printf("\n");
-					}
-				}
-				printf("\n\n\n");
-			
-			MPI_Barrier(MPI_COMM_WORLD);
-			}
-			
+			MPI_Finalize();
+			return 0;
 			//perform timed operation
 			timedOperation( subA, subB, subR, rowRange, disp_width, numTasks, taskid, temp);
 			
