@@ -78,8 +78,8 @@ int main(int argc, char *argv[])
 			}
 
 			//for testing correctness
-				printMat(matA,disp_width);
-				printMat(matB,disp_width);
+				printMat(datSubA,disp_width);
+				printMat(datSubB,disp_width);
 			
 			int rowDivTasks = disp_height/numTasks;
 			int rowModTasks = disp_height%numTasks;
