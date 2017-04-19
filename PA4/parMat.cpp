@@ -12,7 +12,7 @@ using namespace std;
 
 //function prototypes
 void transpose(vector< int > &matB, long long int max_width);
-void timedOperation( vector< int > &subA, vector< int > subB, vector< long long int > &subR, int rowRange[],
+void timedOperation( vector< int > subA, vector< int > &subB, vector< long long int > &subR, int rowRange[],
 					 int disp_width, int numTasks, int taskid, vector<int> &temp);
 
 //main program
@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
 			double start = MPI_Wtime();
 								
 			//perform timed operation
-			timedOperation(subA,subB,subR,rowRange,disp_width,numTasks,taskid,temp);
+			timedOperation( subA, subB, subR, rowRange, disp_width, numTasks, taskid, temp);
 				
 			//end timer
 			MPI_Barrier(MPI_COMM_WORLD);
@@ -133,8 +133,7 @@ int main(int argc, char *argv[])
 			MPI_Recv(&subB[0], rowRange[0] * disp_width, MPI_INT, index, 12, MPI_COMM_WORLD, &status);
 			
 			//perform timed operation
-			timedOperation(subA,subB,subR,rowRange,disp_width,numTasks,taskid,temp);
-
+			timedOperation( subA, subB, subR, rowRange, disp_width, numTasks, taskid, temp);
 	
 		}
 	}
@@ -160,7 +159,7 @@ void transpose(vector< int > &matB, long long int max_width){
 	
 }
 
-void timedOperation( vector< int > &subA, vector< int > subB, vector<long long int> subR, int rowRange[],
+void timedOperation( vector< int > subA, vector< int > &subB, vector< long long int > &subR, int rowRange[],
 					 int disp_width, int numTasks, int taskid, vector<int> &temp){
 	
 	int index,jndex,kndex;
