@@ -12,7 +12,7 @@ using namespace std;
 
 //function prototypes
 void transpose(vector< int > &matB, long long int max_width);
-void timedOperation( vector< int > &subA, vector< int > subB, vector<long long int> subR vector< long long int > &subR, int rowRange[],
+void timedOperation( vector< int > &subA, vector< int > subB, vector< long long int > &subR, int rowRange[],
 					 int disp_width, int numTasks, int taskid);
 
 //main program
@@ -157,7 +157,7 @@ void transpose(vector< int > &matB, long long int max_width){
 	
 }
 
-void timedOperation( vector< int > &subA, vector< int > subB, vector<long long int> subR, vector< long long int > &subR, int rowRange[],
+void timedOperation( vector< int > &subA, vector< int > subB, vector<long long int> subR, int rowRange[],
 					 int disp_width, int numTasks, int taskid){
 	
 	int index,jndex;
