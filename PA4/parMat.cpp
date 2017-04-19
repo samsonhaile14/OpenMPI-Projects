@@ -104,6 +104,8 @@ int main(int argc, char *argv[])
 				rowRange[1] += rowRange[0];
 				
 			}
+			MPI_Finalize();
+			return 0;
 			
 			//implicitly assign master node rows to process (use matrix from matA/B[pos] onwards)
 				//determine number of rows given to process
@@ -116,8 +118,6 @@ int main(int argc, char *argv[])
 
 			//Ensure all calculations happen at the same time
 			MPI_Barrier(MPI_COMM_WORLD);				
-			MPI_Finalize();
-			return 0;
 			//start timer
 			double start = MPI_Wtime();
 								
@@ -155,11 +155,12 @@ int main(int argc, char *argv[])
 			MPI_Recv(&rowRange[0], 2, MPI_INT, 0, 10, MPI_COMM_WORLD, &status);
 			MPI_Recv(&subA[0], rowRange[0] * disp_width, MPI_INT, 0, 11, MPI_COMM_WORLD, &status);
 			MPI_Recv(&subB[0], rowRange[0] * disp_width, MPI_INT, 0, 12, MPI_COMM_WORLD, &status);
+
+			MPI_Finalize();
+			return 0;
 			
 			//Ensure all calculations happen at the same time
 			MPI_Barrier(MPI_COMM_WORLD);
-			MPI_Finalize();
-			return 0;
 			//perform timed operation
 			timedOperation( subA, subB, subR, rowRange, disp_width, numTasks, taskid, temp);
 			
