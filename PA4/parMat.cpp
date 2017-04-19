@@ -160,7 +160,7 @@ void transpose(vector< int > &matB, long long int max_width){
 void timedOperation( vector< int > &subA, vector< int > subB, vector<long long int> subR, int rowRange[],
 					 int disp_width, int numTasks, int taskid, vector<int> &temp){
 	
-	int index,jndex;
+	int index,jndex,kndex;
 	MPI_Status status;
 	
 	int colRange[] = {rowRange[0], rowRange[1]};	//element 0 : column size
