@@ -137,6 +137,8 @@ int main(int argc, char *argv[])
 			
 			//perform timed operation
 			timedOperation( subA, subB, subR, rowRange, disp_width, numTasks, taskid, temp);
+			
+			MPI_Barrier(MPI_COMM_WORLD);
 	
 		}
 	}
