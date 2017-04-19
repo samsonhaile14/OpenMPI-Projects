@@ -106,6 +106,9 @@ int main(int argc, char *argv[])
 				copy( datSubA.begin() + pos, datSubA.begin() + pos + rowRange[0] * disp_width, subA.begin() );
 				copy( datSubB.begin() + pos, datSubB.begin() + pos + rowRange[0] * disp_width, subB.begin() );
 
+			//start timer
+			double start = MPI_Wtime();
+								
 			//perform timed operation
 			timedOperation(subA,subB,subR,rowRange,disp_width,numTasks,taskid,temp);
 				
@@ -165,9 +168,6 @@ void timedOperation( vector< int > &subA, vector< int > subB, vector<long long i
 	
 	int colRange[] = {rowRange[0], rowRange[1]};	//element 0 : column size
 													//element 1 : column start
-
-	//start timer
-	double start = MPI_Wtime();
 	
 	//Perform timed operation
 	for( int tIndex = 0; tIndex < numTasks - 1; tIndex++){
