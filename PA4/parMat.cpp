@@ -20,13 +20,19 @@ int maint(int argc, char *argv[])
 	//variables
 	long long int index, jndex, kndex;
 	int max_width, max_height,disp_width,disp_height;
-	int numTasks, taskid;	
+	int numTasks, taskid;
+
+	MPI_Status status;
 	
 	vector< int > subA( (max_width * ((max_height / numTasks) + 1), 0));
 	vector< int > subB( (max_width * ((max_height / numTasks) + 1), 0));
 	vector< long long int > subR( (max_width * ((max_height / numTasks) + 1), 0));
 	vector< int > temp((max_width * ((max_height / numTasks) + 1), 0));
 
+	int rowRange[2];			//element 0: row/col size
+								//element 1: row/col start
+	
+	
 	if(argc < 1){
 		return 1;
 	}
@@ -43,10 +49,7 @@ int maint(int argc, char *argv[])
 		//Set appropriate number of elements per matrix
 			vector< int > matA(max_width*max_height,0);
 			vector< int > matB(max_width*max_height,0);
-			
-			int rowRange[2];			//element 0: row/col size
-										//element 1: row/col start
-			
+						
 		//designate matrix values
 		for(index = 0; index < max_height * max_width; index++){
 				matA[index] = (1 + (random() % 9999));
@@ -101,10 +104,7 @@ int maint(int argc, char *argv[])
 
 			copy( datSubA.begin() + pos, datSubA.begin() + pos + rowRange[0] * disp_width, subA.begin() );
 			copy( datSubB.begin() + pos, datSubB.begin() + pos + rowRange[0] * disp_width, subB.begin() );
-			
-			int colRange[] = {rowRange[0], rowRange[1]};	//element 0 : column size
-															//element 1 : column start
-				
+							
 			//start timer
 			double start = MPI_Wtime();
 			int tIndex = 0;
@@ -134,8 +134,8 @@ int maint(int argc, char *argv[])
 						MPI_Send(&temp[0], tempRange[0] * disp_width, MPI_INT, (index + 1) % numTasks, 11, MPI_COMM_WORLD);
 					}
 					else if( ((index + 1) % numTasks) == taskid){
-						MPI_Recv(&colRange[0], 2, MPI_INT, index, 10, MPI_COMM_WORLD);
-						MPI_Send(&subB[0], colRange[0] * disp_width, MPI_INT, index, 11, MPI_COMM_WORLD);						
+						MPI_Recv(&colRange[0], 2, MPI_INT, index, 10, MPI_COMM_WORLD, &status);
+						MPI_Recv(&subB[0], colRange[0] * disp_width, MPI_INT, index, 11, MPI_COMM_WORLD, &status);						
 					}
 					
 					MPI_Barrier(MPI_COMM_WORLD);
@@ -164,7 +164,52 @@ int maint(int argc, char *argv[])
 	
 	//slave node operation
 	else{
-		
+		for(disp_width = max_width; disp_width <= max_width; disp_width += max_width / 5){
+			disp_height = disp_width;
+			
+			//receive matrices
+			MPI_Recv(&rowRange[0], 2, MPI_INT, index, 10, MPI_COMM_WORLD);
+			MPI_Recv(&subA[pos], rowRange[0] * disp_width, MPI_INT, index, 11, MPI_COMM_WORLD);
+			MPI_Recv(&subB[pos], rowRange[0] * disp_width, MPI_INT, index, 12, MPI_COMM_WORLD);
+			
+			int colRange[] = {rowRange[0], rowRange[1]};	//element 0 : column size
+															//element 1 : column start
+	
+			//Perform timed operation
+			for( tIndex = 0; tIndex < numTasks - 1; tIndex++){
+				//Multiply Matrices (storing results in subR)
+				for(index = rowRange[1]; index < rowRange[1] + rowRange[0]; index++){
+					for(jndex = colRange[1]; jndex < colRange[1] + colRange[0]; jndex++){
+						subR[((index-rowRange[1]) * disp_width) + jndex] = 0;
+						for(kndex = 0; kndex < disp_width; kndex++){
+							subR[	((index-rowRange[1]) * disp_width) + jndex	] += 
+								(long long int) datSubA[index * disp_width + kndex] * (long long int) datSubB[jndex * disp_width + kndex];
+						}
+					}
+				}
+				
+				//Send matrix B rows to next process and receive from process
+				copy( subB.begin(), subB.begin() + colRange[0] * disp_width, temp.begin() );
+
+				int tempRange[] = {colRange[0], colRange[1]};
+				
+				for(index = 0; index < numTasks; index++){
+					
+					if( index == taskid){
+						MPI_Send(&tempRange[0], 2, MPI_INT, (index + 1) % numTasks, 10, MPI_COMM_WORLD);
+						MPI_Send(&temp[0], tempRange[0] * disp_width, MPI_INT, (index + 1) % numTasks, 11, MPI_COMM_WORLD);
+					}
+					else if( ((index + 1) % numTasks) == taskid){
+						MPI_Recv(&colRange[0], 2, MPI_INT, index, 10, MPI_COMM_WORLD, &status);
+						MPI_Recv(&subB[0], colRange[0] * disp_width, MPI_INT, index, 11, MPI_COMM_WORLD, &status);						
+					}
+					
+					MPI_Barrier(MPI_COMM_WORLD);
+				}
+						
+			}
+	
+		}
 	}
 
 	MPI_Finalize();
