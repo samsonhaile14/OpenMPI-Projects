@@ -130,11 +130,11 @@ int main(int argc, char *argv[])
 				
 				for(index = 1; index < numTasks; index++){
 					if(index == taskid)
-						printLLMat(subR,disp_width, rowRange[0]);
+						printLLMat(subR,disp_width, rowRange[0],taskid);
 					MPI_Barrier(MPI_COMM_WORLD);
 				}
 				if(MASTER == taskid)
-					printLLMat(subR,disp_width, rowRange[0]);
+					printLLMat(subR,disp_width, rowRange[0],taskid);
 
 				MPI_Barrier(MPI_COMM_WORLD);
 			
@@ -165,11 +165,11 @@ int main(int argc, char *argv[])
 
 				for(index = 1; index < numTasks; index++){
 					if(index == taskid)
-						printLLMat(subR,disp_width, rowRange[0]);
+						printLLMat(subR,disp_width, rowRange[0],taskid);
 					MPI_Barrier(MPI_COMM_WORLD);
 				}
 				if(MASTER == taskid)
-					printLLMat(subR,disp_width, rowRange[0]);
+					printLLMat(subR,disp_width, rowRange[0],taskid);
 
 				MPI_Barrier(MPI_COMM_WORLD);
 			
