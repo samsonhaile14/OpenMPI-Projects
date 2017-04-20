@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
 				MPI_Barrier(MPI_COMM_WORLD);
 */			
 			//calculate elapsed time and output
-			printf("%lld, %f\n", disp_width, end - start);
+			printf("%d, %lld, %f\n", numTasks, disp_width, end - start);
 
 		}
 	}
