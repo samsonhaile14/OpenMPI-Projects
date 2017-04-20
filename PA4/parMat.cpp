@@ -130,11 +130,11 @@ int main(int argc, char *argv[])
 				
 				for(index = 1; index < numTasks; index++){
 					if(index == taskid)
-						printLLMat(subB,disp_width, rowRange[0],taskid);
+						printLLMat(subR,disp_width, rowRange[0],taskid);
 					MPI_Barrier(MPI_COMM_WORLD);
 				}
 				if(MASTER == taskid)
-					printLLMat(subB,disp_width, rowRange[0],taskid);
+					printLLMat(subR,disp_width, rowRange[0],taskid);
 
 				MPI_Barrier(MPI_COMM_WORLD);
 			
@@ -165,11 +165,11 @@ int main(int argc, char *argv[])
 
 				for(index = 1; index < numTasks; index++){
 					if(index == taskid)
-						printLLMat(subB,disp_width, rowRange[0],taskid);
+						printLLMat(subR,disp_width, rowRange[0],taskid);
 					MPI_Barrier(MPI_COMM_WORLD);
 				}
 				if(MASTER == taskid)
-					printLLMat(subB,disp_width, rowRange[0],taskid);
+					printLLMat(subR,disp_width, rowRange[0],taskid);
 
 				MPI_Barrier(MPI_COMM_WORLD);
 			
@@ -207,7 +207,7 @@ void timedOperation( vector< int > subA, vector< int > &subB, vector< long long 
 													//element 1 : column start
 	
 	//Perform timed operation
-	for( int tIndex = 0; tIndex < numTasks - 1; tIndex++){
+	for( int tIndex = 0; tIndex < numTasks; tIndex++){
 		//Multiply Matrices (storing results in subR)
 		for(index = 0; index < rowRange[0]; index++){
 			for(jndex = 0; jndex < colRange[0]; jndex++){
