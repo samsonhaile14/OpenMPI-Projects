@@ -62,7 +62,11 @@ int main(int argc, char *argv[])
 		}
 		
 		//transpose matrix B for contiguous access
+		printMat(matB, max_width);
+
 		transpose(matB, max_width);
+		
+		printMat(matB,max_width);
 		
 		//compute product
 		for(disp_width = max_width; disp_width <= max_width; disp_width += max_width / 5){
