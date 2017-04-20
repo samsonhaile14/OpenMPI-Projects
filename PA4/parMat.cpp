@@ -79,8 +79,8 @@ int main(int argc, char *argv[])
 			}
 
 			//for testing correctness
-				printMat(datSubA,disp_width);
-				printMat(datSubB,disp_width);
+				//printMat(datSubA,disp_width);
+				//printMat(datSubB,disp_width);
 			
 			int rowDivTasks = disp_height/numTasks;
 			int rowModTasks = disp_height%numTasks;
@@ -126,8 +126,7 @@ int main(int argc, char *argv[])
 			MPI_Barrier(MPI_COMM_WORLD);
 			double end = MPI_Wtime();
 
-			//for testing correctness
-				
+/*			//for testing correctness			
 				for(index = 1; index < numTasks; index++){
 					if(index == taskid)
 						printLLMat(subR,disp_width, rowRange[0],taskid);
@@ -137,7 +136,7 @@ int main(int argc, char *argv[])
 					printLLMat(subR,disp_width, rowRange[0],taskid);
 
 				MPI_Barrier(MPI_COMM_WORLD);
-			
+*/			
 			//calculate elapsed time and output
 			printf("%lld, %f\n", disp_width, end - start);
 
@@ -161,8 +160,7 @@ int main(int argc, char *argv[])
 			
 			MPI_Barrier(MPI_COMM_WORLD);
 
-			//for testing correctness
-
+/*			//for testing correctness
 				for(index = 1; index < numTasks; index++){
 					if(index == taskid)
 						printLLMat(subR,disp_width, rowRange[0],taskid);
@@ -172,7 +170,7 @@ int main(int argc, char *argv[])
 					printLLMat(subR,disp_width, rowRange[0],taskid);
 
 				MPI_Barrier(MPI_COMM_WORLD);
-			
+*/			
 		}
 	}
 
