@@ -167,9 +167,9 @@ int main(int argc, char *argv[])
 				}
 				if(MASTER == taskid)
 					printLLMat(subR,disp_width, rowRange[0]);
-*/
+
 				MPI_Barrier(MPI_COMM_WORLD);
-			
+*/			
 		}
 	}
 
