@@ -8,7 +8,7 @@
 
 using namespace std;
 
-void transpose(vector< int > &matB, long long int max_width)
+void transpose(vector< int > &matB, long long int max_width);
 
 //main program
 int main(int argc, char *argv[])
