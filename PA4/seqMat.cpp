@@ -1,5 +1,9 @@
 //Sequential matrix multiplication
 // by Samson Haile
+// 
+//Description: This program multiplies two matrices to obtain a result. The program can be computed over 
+//				sub-sizes of the largest sized matrix, for which the maximum size is specified in the batch
+//				file used to execute the program executable
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,7 +12,9 @@
 
 using namespace std;
 
+//function prototypes
 void transpose(vector< int > &matB, long long int max_width);
+void printMat( vector<int> matA, int mat_width);
 
 //main program
 int main(int argc, char *argv[])
@@ -50,22 +56,10 @@ int main(int argc, char *argv[])
 		disp_height = disp_width;
 
 /*		//tests correctness
-		for(index = 0; index < disp_height; index++){
-			for(jndex = 0; jndex < disp_width; jndex++){
-				printf("%d ", matA[index*disp_width + jndex]);
-			}
-			printf("\n");
-		}
-		printf("\n\n\n");
-
-		for(index = 0; index < disp_height; index++){
-			for(jndex = 0; jndex < disp_width; jndex++){
-				printf("%d ", matB[index*disp_width + jndex]);
-			}
-			printf("\n");
-		}
-		printf("\n\n\n");
+			printMat(matA,disp_width);
+			printMat(matB,disp_width);
 */		
+
 		//start timer
 		double start = MPI_Wtime();
 
@@ -89,6 +83,7 @@ int main(int argc, char *argv[])
 			printf("\n");
 		}
 */		
+
 		//calculate elapsed time and output
 		printf("%lld, %f\n", disp_width, end - start);
 
@@ -98,19 +93,32 @@ int main(int argc, char *argv[])
 
 }
 
-//function
-void transpose(vector< int > &matB, long long int max_width){
-	
-	long long int index, jndex;
-	int temp;
-	
-	for(index = 0; index < max_width;index++){
-		for(jndex = index + 1; jndex < max_width; jndex++){
-			temp = matB[index * max_width + jndex];
-			matB[index * max_width + jndex] = matB[jndex * max_width + index];
-			matB[jndex * max_width + index] = temp;
+//function implementation
+
+	//transposes matrix to ensure multiplication occurs along contiguous elements
+	void transpose(vector< int > &matB, long long int max_width){
+		
+		long long int index, jndex;
+		int temp;
+		
+		for(index = 0; index < max_width;index++){
+			for(jndex = index + 1; jndex < max_width; jndex++){
+				temp = matB[index * max_width + jndex];
+				matB[index * max_width + jndex] = matB[jndex * max_width + index];
+				matB[jndex * max_width + index] = temp;
+			}
 		}
+		
 	}
 	
-}
-
+	//Prints multiplied matrices to console screen
+	void printMat( vector<int> matA, int mat_width){
+		
+		for(int index = 0; index < mat_width; index++){
+			for(int jndex = 0; jndex < mat_width; jndex++){
+				printf("%d ", matA[index * mat_width + jndex]);
+			}
+			printf("\n");
+		}
+		printf("\n\n\n");
+	}
