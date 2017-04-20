@@ -38,18 +38,17 @@ int main(int argc, char *argv[])
 	
 	max_width = max_height = atoll(argv[1]);
 
+	//initialization
+	MPI_Init(&argc, &argv);
+	MPI_Comm_size(MPI_COMM_WORLD, &numTasks);
+	MPI_Comm_rank(MPI_COMM_WORLD, &taskid);
+	
 	//create and allocate memory for vectors
 	vector< int > subA( max_width * ((max_height / numTasks) + 1), 0);
 	vector< int > subB( max_width * ((max_height / numTasks) + 1), 0);
 	vector< long long int > subR( max_width * ((max_height / numTasks) + 1), 0);
 	vector< int > temp(max_width * ((max_height / numTasks) + 1), 0);
 
-
-	//initialization
-	MPI_Init(&argc, &argv);
-	MPI_Comm_size(MPI_COMM_WORLD, &numTasks);
-	MPI_Comm_rank(MPI_COMM_WORLD, &taskid);
-	
 	
 	if(taskid == MASTER){
 		//Set appropriate number of elements per matrix
@@ -78,8 +77,8 @@ int main(int argc, char *argv[])
 			}
 
 			//for testing correctness
-				printMat(datSubA,disp_width);
-				printMat(datSubB,disp_width);
+				//printMat(datSubA,disp_width);
+				//printMat(datSubB,disp_width);
 			
 			int rowDivTasks = disp_height/numTasks;
 			int rowModTasks = disp_height%numTasks;
