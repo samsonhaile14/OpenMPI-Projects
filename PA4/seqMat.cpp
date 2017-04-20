@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 	transpose(matB, max_width);
 			
 	//compute product
-	for(disp_width = max_width / 5; disp_width <= max_width; disp_width += max_width / 5){
+	for(disp_width = max_width; disp_width <= max_width; disp_width += max_width / 5){
 		disp_height = disp_width;
 
 		//tests correctness
