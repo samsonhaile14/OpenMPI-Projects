@@ -255,7 +255,10 @@ void printMat( vector<int> matA, int mat_width){
 }
 
 void printLLMat( vector<long long int> matA, int mat_width, int mat_height, int taskid){
-	fstream fout("ans" + to_string(taskid) + ".dat", fstream::out);
+	string fName = "ans";
+	fName += ('0' + taskid);
+	fName += ".dat";
+	fstream fout(fName.c_str(), fstream::out);
 	for(int index = 0; index < mat_height; index++){
 		for(int jndex = 0; jndex < mat_width; jndex++){
 			fout << matA[index * mat_width + jndex] << ' ';
