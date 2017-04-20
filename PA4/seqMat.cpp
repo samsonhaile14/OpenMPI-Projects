@@ -47,10 +47,10 @@ int main(int argc, char *argv[])
 	for(disp_width = max_width; disp_width <= max_width; disp_width += max_width / 5){
 		disp_height = disp_width;
 
-		//tests correctness
+/*		//tests correctness
 		for(index = 0; index < disp_height; index++){
 			for(jndex = 0; jndex < disp_width; jndex++){
-				printf("%lld ", matA[index*disp_width + jndex]);
+				printf("%d ", matA[index*disp_width + jndex]);
 			}
 			printf("\n");
 		}
@@ -58,12 +58,12 @@ int main(int argc, char *argv[])
 
 		for(index = 0; index < disp_height; index++){
 			for(jndex = 0; jndex < disp_width; jndex++){
-				printf("%lld ", matB[index*disp_width + jndex]);
+				printf("%d ", matB[index*disp_width + jndex]);
 			}
 			printf("\n");
 		}
 		printf("\n\n\n");
-		
+*/		
 		//start timer
 		double start = MPI_Wtime();
 
@@ -79,14 +79,14 @@ int main(int argc, char *argv[])
 		//end timer
 		double end = MPI_Wtime();
 
-		//tests correctness
+/*		//tests correctness
 		for(index = 0; index < disp_height; index++){
 			for(jndex = 0; jndex < disp_width; jndex++){
 				printf("%lld ", result[index*disp_width + jndex]);
 			}
 			printf("\n");
 		}
-		
+*/		
 		//calculate elapsed time and output
 		printf("%d, %f\n", disp_width, end - start);
 
