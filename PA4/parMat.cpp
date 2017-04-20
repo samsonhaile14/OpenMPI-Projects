@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 
 	//variables
 	long long int index, jndex, kndex;
-	long long int max_width, max_height,disp_width,disp_height;
+	long long int max_width, max_height, sub_sizes, disp_width,disp_height;
 	int numTasks, taskid;
 
 	MPI_Status status;
@@ -34,11 +34,12 @@ int main(int argc, char *argv[])
 								//element 1: row/col start
 	
 	
-	if(argc < 1){
+	if(argc <= 2){
 		return 1;
 	}
 	
 	max_width = max_height = atoll(argv[1]);
+	sub_sizes = atoll(argv[2]);
 
 	//initialization
 	MPI_Init(&argc, &argv);
@@ -67,7 +68,7 @@ int main(int argc, char *argv[])
 		transpose(matB, max_width);
 		
 		//compute product
-		for(disp_width = max_width/5; disp_width <= max_width; disp_width += max_width / 5){
+		for(disp_width = max_width/sub_sizes; disp_width <= max_width; disp_width += max_width / sub_sizes){
 			disp_height = disp_width;
 			vector<int> datSubA(disp_width * disp_height);
 			vector<int> datSubB(disp_width * disp_height);
@@ -145,7 +146,7 @@ int main(int argc, char *argv[])
 	
 	//slave node operation
 	else{
-		for(disp_width = max_width/5; disp_width <= max_width; disp_width += max_width / 5){
+		for(disp_width = max_width/sub_sizes; disp_width <= max_width; disp_width += max_width / sub_sizes){
 			disp_height = disp_width;
 			
 			//receive matrices

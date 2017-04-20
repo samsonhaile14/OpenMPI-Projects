@@ -16,13 +16,15 @@ int main(int argc, char *argv[])
 
 	//variables
 	long long int index, jndex, kndex;
-	long long int x,y, max_width, max_height,disp_width,disp_height;	
+	long long int x,y, max_width, max_height,sub_sizes, disp_width,disp_height;	
 
-	if(argc < 1){
+	if(argc <= 2){
 		return 1;
 	}
 	
 	max_width = max_height = atoll(argv[1]);
+	
+	sub_sizes = atoll(argv[2]);
 
 	//initialization
 	MPI_Init(&argc, &argv);	//only used for timer
@@ -44,7 +46,7 @@ int main(int argc, char *argv[])
 	transpose(matB, max_width);
 			
 	//compute product
-	for(disp_width = max_width; disp_width <= max_width; disp_width += max_width / 5){
+	for(disp_width = max_width / sub_sizes; disp_width <= max_width; disp_width += max_width / sub_sizes){
 		disp_height = disp_width;
 
 /*		//tests correctness
@@ -88,7 +90,7 @@ int main(int argc, char *argv[])
 		}
 */		
 		//calculate elapsed time and output
-		printf("%d, %f\n", disp_width, end - start);
+		printf("%lld, %f\n", disp_width, end - start);
 
 		}
 
