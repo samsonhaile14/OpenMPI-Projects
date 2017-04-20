@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
+#include <fstream>
+#include <string>
 #include "mpi.h"
 
 #define MASTER 0
@@ -15,7 +17,7 @@ void transpose(vector< int > &matB, long long int max_width);
 void timedOperation( vector< int > subA, vector< int > &subB, vector< long long int > &subR, int rowRange[],
 					 long long int disp_width, int numTasks, int taskid, vector<int> &temp);
 void printMat( vector<int> matA, int mat_width);					 
-void printLLMat( vector<long long int> matA, int mat_width, int mat_height);
+void printLLMat( vector<long long int> matA, int mat_width, int mat_height,int taskid);
 
 //main program
 int main(int argc, char *argv[])
@@ -125,7 +127,8 @@ int main(int argc, char *argv[])
 			double end = MPI_Wtime();
 
 			//for testing correctness
-/*				for(index = 1; index < numTasks; index++){
+				
+				for(index = 1; index < numTasks; index++){
 					if(index == taskid)
 						printLLMat(subR,disp_width, rowRange[0]);
 					MPI_Barrier(MPI_COMM_WORLD);
@@ -133,9 +136,8 @@ int main(int argc, char *argv[])
 				if(MASTER == taskid)
 					printLLMat(subR,disp_width, rowRange[0]);
 
-				printf("\n\n\n");
 				MPI_Barrier(MPI_COMM_WORLD);
-*/			
+			
 			//calculate elapsed time and output
 			printf("%lld, %f\n", disp_width, end - start);
 
@@ -160,7 +162,8 @@ int main(int argc, char *argv[])
 			MPI_Barrier(MPI_COMM_WORLD);
 
 			//for testing correctness
-/*				for(index = 1; index < numTasks; index++){
+
+				for(index = 1; index < numTasks; index++){
 					if(index == taskid)
 						printLLMat(subR,disp_width, rowRange[0]);
 					MPI_Barrier(MPI_COMM_WORLD);
@@ -169,7 +172,7 @@ int main(int argc, char *argv[])
 					printLLMat(subR,disp_width, rowRange[0]);
 
 				MPI_Barrier(MPI_COMM_WORLD);
-*/			
+			
 		}
 	}
 
@@ -251,12 +254,13 @@ void printMat( vector<int> matA, int mat_width){
 	printf("\n\n\n");
 }
 
-void printLLMat( vector<long long int> matA, int mat_width, int mat_height){
-	
+void printLLMat( vector<long long int> matA, int mat_width, int mat_height, int taskid){
+	fstream fout("ans" + to_string(taskid) + ".dat", fstream::out);
 	for(int index = 0; index < mat_height; index++){
 		for(int jndex = 0; jndex < mat_width; jndex++){
-			printf("%lld ", matA[index * mat_width + jndex]);
+			fout << matA[index * mat_width + jndex] << ' ';
 		}
-		printf("\n");
+		fout << '\n';
 	}
+	fout.close();
 }
