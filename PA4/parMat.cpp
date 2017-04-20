@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
 		transpose(matB, max_width);
 		
 		//compute product
-		for(disp_width = max_width; disp_width <= max_width; disp_width += max_width / 5){
+		for(disp_width = max_width/5; disp_width <= max_width; disp_width += max_width / 5){
 			disp_height = disp_width;
 			vector<int> datSubA(disp_width * disp_height);
 			vector<int> datSubB(disp_width * disp_height);
@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
 	
 	//slave node operation
 	else{
-		for(disp_width = max_width; disp_width <= max_width; disp_width += max_width / 5){
+		for(disp_width = max_width/5; disp_width <= max_width; disp_width += max_width / 5){
 			disp_height = disp_width;
 			
 			//receive matrices
@@ -197,6 +197,7 @@ void transpose(vector< int > &matB, long long int max_width){
 	
 }
 
+//Performs the timed portion of the matrix multiplication
 void timedOperation( vector< int > subA, vector< int > &subB, vector< long long int > &subR, int rowRange[],
 					 long long int disp_width, int numTasks, int taskid, vector<int> &temp){
 	
@@ -243,6 +244,7 @@ void timedOperation( vector< int > subA, vector< int > &subB, vector< long long 
 	
 }
 
+//Prints multiplied matrices to console screen
 void printMat( vector<int> matA, int mat_width){
 	
 	for(int index = 0; index < mat_width; index++){
@@ -254,6 +256,7 @@ void printMat( vector<int> matA, int mat_width){
 	printf("\n\n\n");
 }
 
+//prints result matrix pieces to multiple files
 void printLLMat( vector<long long int> matA, int mat_width, int mat_height, int taskid){
 	string fName = "ans";
 	fName += ('0' + taskid);
