@@ -62,11 +62,7 @@ int main(int argc, char *argv[])
 		}
 		
 		//transpose matrix B for contiguous access
-		printMat(matB, max_width);
-
 		transpose(matB, max_width);
-		
-		printMat(matB,max_width);
 		
 		//compute product
 		for(disp_width = max_width; disp_width <= max_width; disp_width += max_width / 5){
@@ -129,7 +125,7 @@ int main(int argc, char *argv[])
 			double end = MPI_Wtime();
 
 			//for testing correctness
-				for(index = 1; index < numTasks; index++){
+/*				for(index = 1; index < numTasks; index++){
 					if(index == taskid)
 						printLLMat(subR,disp_width, rowRange[0]);
 					MPI_Barrier(MPI_COMM_WORLD);
@@ -139,7 +135,7 @@ int main(int argc, char *argv[])
 
 				printf("\n\n\n");
 				MPI_Barrier(MPI_COMM_WORLD);
-			
+*/			
 			//calculate elapsed time and output
 			printf("%lld, %f\n", disp_width, end - start);
 
@@ -164,14 +160,14 @@ int main(int argc, char *argv[])
 			MPI_Barrier(MPI_COMM_WORLD);
 
 			//for testing correctness
-				for(index = 1; index < numTasks; index++){
+/*				for(index = 1; index < numTasks; index++){
 					if(index == taskid)
 						printLLMat(subR,disp_width, rowRange[0]);
 					MPI_Barrier(MPI_COMM_WORLD);
 				}
 				if(MASTER == taskid)
 					printLLMat(subR,disp_width, rowRange[0]);
-
+*/
 				MPI_Barrier(MPI_COMM_WORLD);
 			
 		}
