@@ -189,7 +189,7 @@ void transpose(vector< int > &matB, long long int max_width){
 	int temp;
 	
 	for(index = 0; index < max_width;index++){
-		for(jndex = 0; jndex < max_width; jndex++){
+		for(jndex = index + 1; jndex < max_width; jndex++){
 			temp = matB[index * max_width + jndex];
 			matB[index * max_width + jndex] = matB[jndex * max_width + index];
 			matB[jndex * max_width + index] = temp;
