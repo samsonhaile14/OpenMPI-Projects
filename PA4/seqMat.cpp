@@ -47,6 +47,23 @@ int main(int argc, char *argv[])
 	for(disp_width = max_width / 5; disp_width <= max_width; disp_width += max_width / 5){
 		disp_height = disp_width;
 
+		//tests correctness
+		for(index = 0; index < disp_height; index++){
+			for(jndex = 0; jndex < disp_width; jndex++){
+				printf("%lld ", matA[index*disp_width + jndex]);
+			}
+			printf("\n");
+		}
+		printf("\n\n\n");
+
+		for(index = 0; index < disp_height; index++){
+			for(jndex = 0; jndex < disp_width; jndex++){
+				printf("%lld ", matB[index*disp_width + jndex]);
+			}
+			printf("\n");
+		}
+		printf("\n\n\n");
+		
 		//start timer
 		double start = MPI_Wtime();
 
@@ -54,13 +71,21 @@ int main(int argc, char *argv[])
 		for(index = 0; index < disp_height; index++){
 			for(jndex = 0; jndex < disp_width; jndex++){
 				for(kndex = 0; kndex < disp_width; kndex++){
-					result[index*max_width + jndex] += (long long int) matA[index*max_width + kndex] * (long long int) matB[jndex*max_width + kndex];
+					result[index*disp_width + jndex] += (long long int) matA[index*disp_width + kndex] * (long long int) matB[jndex*disp_width + kndex];
 				}
 			}
 		}
-
+		
 		//end timer
 		double end = MPI_Wtime();
+
+		//tests correctness
+		for(index = 0; index < disp_height; index++){
+			for(jndex = 0; jndex < disp_width; jndex++){
+				printf("%lld ", result[index*disp_width + jndex]);
+			}
+			printf("\n");
+		}
 		
 		//calculate elapsed time and output
 		printf("%d, %f\n", disp_width, end - start);
