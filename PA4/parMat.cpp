@@ -77,8 +77,8 @@ int main(int argc, char *argv[])
 			}
 
 			//for testing correctness
-				//printMat(datSubA,disp_width);
-				//printMat(datSubB,disp_width);
+				printMat(datSubA,disp_width);
+				printMat(datSubB,disp_width);
 			
 			int rowDivTasks = disp_height/numTasks;
 			int rowModTasks = disp_height%numTasks;
@@ -103,9 +103,6 @@ int main(int argc, char *argv[])
 				rowRange[1] += rowRange[0];
 				
 			}
-			MPI_Finalize();
-			return 0;
-/*	
 			//implicitly assign master node rows to process (use matrix from matA/B[pos] onwards)
 				//determine number of rows given to process
 				rowRange[0] = rowDivTasks;
@@ -114,7 +111,7 @@ int main(int argc, char *argv[])
 				}
 				copy( datSubA.begin() + pos, datSubA.begin() + pos + rowRange[0] * disp_width, subA.begin() );
 				copy( datSubB.begin() + pos, datSubB.begin() + pos + rowRange[0] * disp_width, subB.begin() );
-*/
+
 			//Ensure all calculations happen at the same time
 			MPI_Barrier(MPI_COMM_WORLD);				
 			//start timer
@@ -153,10 +150,7 @@ int main(int argc, char *argv[])
 			//receive matrices
 			MPI_Recv(&rowRange[0], 2, MPI_INT, 0, 10, MPI_COMM_WORLD, &status);
 			MPI_Recv(&subA[0], rowRange[0] * disp_width, MPI_INT, 0, 11, MPI_COMM_WORLD, &status);
-			MPI_Recv(&subB[0], rowRange[0] * disp_width, MPI_INT, 0, 12, MPI_COMM_WORLD, &status);
-
-			MPI_Finalize();
-			return 0;
+			MPI_Recv(&subB[0], rowRange[0] * disp_width, MPI_INT, 0, 12, MPI_COMM_WORLD, &status);			
 			
 			//Ensure all calculations happen at the same time
 			MPI_Barrier(MPI_COMM_WORLD);
@@ -180,7 +174,7 @@ int main(int argc, char *argv[])
 	}
 
 	MPI_Finalize();
-
+	return 0;
 }
 
 
