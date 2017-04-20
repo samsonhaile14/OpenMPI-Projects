@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 
 	//variables
 	long long int index, jndex, kndex;
-	int x,y, max_width, max_height,disp_width,disp_height;	
+	long long int x,y, max_width, max_height,disp_width,disp_height;	
 
 	if(argc < 1){
 		return 1;
