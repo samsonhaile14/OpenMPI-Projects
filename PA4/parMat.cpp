@@ -17,7 +17,7 @@ void transpose(vector< int > &matB, long long int max_width);
 void timedOperation( vector< int > subA, vector< int > &subB, vector< long long int > &subR, int rowRange[],
 					 long long int disp_width, int numTasks, int taskid, vector<int> &temp);
 void printMat( vector<int> matA, int mat_width);					 
-void printLLMat( vector<int> matA, int mat_width, int mat_height,int taskid);
+void printLLMat( vector<long long int> matA, int mat_width, int mat_height,int taskid);
 
 //main program
 int main(int argc, char *argv[])
@@ -254,7 +254,7 @@ void printMat( vector<int> matA, int mat_width){
 	printf("\n\n\n");
 }
 
-void printLLMat( vector<int> matA, int mat_width, int mat_height, int taskid){
+void printLLMat( vector<long long int> matA, int mat_width, int mat_height, int taskid){
 	string fName = "ans";
 	fName += ('0' + taskid);
 	fName += ".dat";
