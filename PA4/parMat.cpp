@@ -71,6 +71,8 @@ int main(int argc, char *argv[])
 					fin >> max_width;
 					max_height = max_width;
 				}
+				if(taskid != MASTER)
+					fin.close();
 			}
 		}
 		MPI_Barrier(MPI_COMM_WORLD);
@@ -101,7 +103,6 @@ int main(int argc, char *argv[])
 
 			//file input
 			else{
-				fin >> index;
 				for( index = 0; index < max_width * max_height; index++ ){
 						fin >> matA[index];
 				}
