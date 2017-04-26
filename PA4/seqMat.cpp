@@ -106,6 +106,7 @@ int main(int argc, char *argv[])
 		//matrix multiply
 		for(index = 0; index < disp_height; index++){
 			for(jndex = 0; jndex < disp_width; jndex++){
+				result[index*disp_width + jndex] = 0;
 				for(kndex = 0; kndex < disp_width; kndex++){
 					result[index*disp_width + jndex] += (long long int) matA[index*disp_width + kndex] * (long long int) matB[jndex*disp_width + kndex];
 				}
