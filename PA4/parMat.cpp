@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 		outputResults = (bool)atoi(argv[6]);
 	}
 	
-	printf(outputResults ? "true" : "false");
+	printf("%d",argc);
 	
 	max_width = max_height = atoll(argv[1]);
 	sub_sizes = atoll(argv[2]);
