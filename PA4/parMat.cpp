@@ -55,11 +55,26 @@ int main(int argc, char *argv[])
 	
 	max_width = max_height = atoll(argv[1]);
 	sub_sizes = atoll(argv[2]);
-
+	
 	//initialization
 	MPI_Init(&argc, &argv);
 	MPI_Comm_size(MPI_COMM_WORLD, &numTasks);
 	MPI_Comm_rank(MPI_COMM_WORLD, &taskid);
+
+	//check if files are good
+	for( index = 0; index < numTasks;index++){
+		if(index == taskid){
+			if(fin.good()){
+				fin.close();
+				fin.open(argv[3]);
+				if(fin.good()){
+					fin >> max_width;
+					max_height = max_width;
+				}
+			}
+		}
+		MPI_Barrier(MPI_COMM_WORLD);
+	}
 	
 	//create and allocate memory for vectors
 	vector< int > subA( max_width * ((max_height / numTasks) + 1), 0);
@@ -69,16 +84,7 @@ int main(int argc, char *argv[])
 
 	//master operation
 	if(taskid == MASTER){
-		
-		if(fin.good()){
-			fin.close();
-			fin.open(argv[3]);
-			if(fin.good()){
-				fin >> max_width;
-				max_height = max_width;
-			}
-		}
-		
+				
 		//Set appropriate number of elements per matrix
 			vector< int > matA(max_width*max_height,0);
 			vector< int > matB(max_width*max_height,0);
@@ -95,7 +101,7 @@ int main(int argc, char *argv[])
 
 			//file input
 			else{
-				
+				fin >> index;
 				for( index = 0; index < max_width * max_height; index++ ){
 						fin >> matA[index];
 				}
@@ -103,6 +109,7 @@ int main(int argc, char *argv[])
 				fin.close();
 				fin.open(argv[4]);
 
+				fin >> index;
 				for( index = 0; index < max_width * max_height; index++ ){
 						fin >> matB[index];
 				}
