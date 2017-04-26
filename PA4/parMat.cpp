@@ -45,15 +45,13 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 	
-	if(argc > 4){
+	if(argc > 3){
 		fin.open(argv[4]);
 	}
 	
-	if(argc > 6){
+	if(argc > 5){
 		outputResults = (bool)atoi(argv[6]);
 	}
-	
-	printf("%d",argc);
 	
 	max_width = max_height = atoll(argv[1]);
 	sub_sizes = atoll(argv[2]);
