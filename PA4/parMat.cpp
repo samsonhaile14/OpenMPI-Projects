@@ -106,6 +106,8 @@ int main(int argc, char *argv[])
 				for( index = 0; index < max_width * max_height; index++ ){
 						fin >> matB[index];
 				}
+				
+				fin.close();
 
 			}
 			
