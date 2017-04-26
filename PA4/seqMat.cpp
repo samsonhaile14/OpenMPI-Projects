@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
+#include <fstream>
 #include "mpi.h"
 
 using namespace std;
@@ -24,6 +25,7 @@ int main(int argc, char *argv[])
 	long long int index, jndex, kndex;
 	long long int x,y, max_width, max_height,sub_sizes, disp_width,disp_height;	
 	bool outputResult = false;
+	ifstream fin;
 
 	if(argc <= 2){
 		return 1;
