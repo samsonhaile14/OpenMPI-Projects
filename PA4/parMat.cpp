@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 	}
 	
 	if(argc > 5){
-		outputResults = (bool)atoi(argv[6]);
+		outputResults = (bool)atoi(argv[5]);
 	}
 	
 	max_width = max_height = atoll(argv[1]);
