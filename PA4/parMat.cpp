@@ -186,10 +186,8 @@ int main(int argc, char *argv[])
 			double end = MPI_Wtime();
 
 			if(outputResults){
-			//for testing correctness (prints multiplication result to file)			
+				//for testing correctness (prints multiplication result to file)			
 				for(index = 1; index < numTasks; index++){
-					if(index == taskid)
-						printLLMat(subR,disp_width, rowRange[0],taskid);
 					MPI_Barrier(MPI_COMM_WORLD);
 				}
 				if(MASTER == taskid)
@@ -224,17 +222,17 @@ int main(int argc, char *argv[])
 			//Barrier to ensure timing is accurate
 			MPI_Barrier(MPI_COMM_WORLD);
 
-/*			//for testing correctness (prints multiplication result)
+			if(outputResults){
+			//for testing correctness (prints multiplication result to file)			
 				for(index = 1; index < numTasks; index++){
 					if(index == taskid)
 						printLLMat(subR,disp_width, rowRange[0],taskid);
-					MPI_Barrier(MPI_COMM_WORLD);
+				MPI_Barrier(MPI_COMM_WORLD);
 				}
-				if(MASTER == taskid)
-					printLLMat(subR,disp_width, rowRange[0],taskid);
 
 				MPI_Barrier(MPI_COMM_WORLD);
-*/			
+			
+			}
 		}
 	}
 
