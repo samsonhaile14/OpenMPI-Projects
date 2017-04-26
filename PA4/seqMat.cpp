@@ -61,31 +61,31 @@ int main(int argc, char *argv[])
 		vector< long long int > result(max_height*max_width,0);
 		
 	//designate matrix values
-			//random generation input
-			if(!fin.good()){
-				for(index = 0; index < max_height * max_width; index++){
-						matA[index] = (1 + (random() % 9999));
-						matB[index] = (1 + (random() % 9999));
-				}
+		//random generation input
+		if(!fin.good()){
+			for(index = 0; index < max_height * max_width; index++){
+					matA[index] = (1 + (random() % 9999));
+					matB[index] = (1 + (random() % 9999));
 			}
+		}
 
-			//file input
-			else{
-				for( index = 0; index < max_width * max_height; index++ ){
-						fin >> matA[index];
-				}
-				
-				fin.close();
-				fin.open(argv[4]);
-
-				fin >> index;
-				for( index = 0; index < max_width * max_height; index++ ){
-						fin >> matB[index];
-				}
-				
-				fin.close();
-
+		//file input
+		else{
+			for( index = 0; index < max_width * max_height; index++ ){
+					fin >> matA[index];
 			}
+			
+			fin.close();
+			fin.open(argv[4]);
+
+			fin >> index;
+			for( index = 0; index < max_width * max_height; index++ ){
+					fin >> matB[index];
+			}
+			
+			fin.close();
+
+		}
 	
 	//transpose matB for contiguous access
 	transpose(matB, max_width);
