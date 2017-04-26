@@ -1,5 +1,5 @@
 //Parallel matrix multiplication
-// by Samson Haile
+// by 
 // 
 //Description: This program multiplies two matrices and leaves their results spread over
 //				the nodes that compute its results. The program can be computed over sub-sizes
@@ -31,6 +31,8 @@ int main(int argc, char *argv[])
 	long long int index, jndex, kndex;
 	long long int max_width, max_height, sub_sizes, disp_width,disp_height;
 	int numTasks, taskid;
+	bool outputResults = false;
+	ifstream fin;
 
 	MPI_Status status;
 	
@@ -38,8 +40,17 @@ int main(int argc, char *argv[])
 								//element 1: row/col start
 	
 	
+	//argument requirements check and read
 	if(argc <= 2){
 		return 1;
+	}
+	
+	if(argc > 4){
+		fin.open(argv[4]);
+	}
+	
+	if(argc > 6){
+		outputResults = (bool)atoi(argv[6]);
 	}
 	
 	max_width = max_height = atoll(argv[1]);
@@ -58,16 +69,46 @@ int main(int argc, char *argv[])
 
 	//master operation
 	if(taskid == MASTER){
+		
+		if(fin.good()){
+			fin.close();
+			fin.open(argv[3]);
+			if(fin.good()){
+				fin >> max_width;
+				max_height = max_width;
+			}
+		}
+		
 		//Set appropriate number of elements per matrix
 			vector< int > matA(max_width*max_height,0);
 			vector< int > matB(max_width*max_height,0);
 						
 		//designate matrix values
-		for(index = 0; index < max_height * max_width; index++){
-				matA[index] = (1 + (random() % 9999));
-				matB[index] = (1 + (random() % 9999));
-		}
-		
+
+			//random generation input
+			if(!fin.good()){
+				for(index = 0; index < max_height * max_width; index++){
+						matA[index] = (1 + (random() % 9999));
+						matB[index] = (1 + (random() % 9999));
+				}
+			}
+
+			//file input
+			else{
+				
+				for( index = 0; index < max_width * max_height; index++ ){
+						fin >> matA[index];
+				}
+				
+				fin.close();
+				fin.open(argv[4]);
+
+				for( index = 0; index < max_width * max_height; index++ ){
+						fin >> matB[index];
+				}
+
+			}
+			
 		//transpose matrix B for contiguous access
 		transpose(matB, max_width);
 		
@@ -83,9 +124,11 @@ int main(int argc, char *argv[])
 				copy(matB.begin() + (index * max_width), matB.begin() + (index * max_width) + disp_width, datSubB.begin() + disp_width * index );
 			}
 
-			//for testing correctness (prints the matrices that are multiplied)
-				//printMat(datSubA,disp_width);
-				//printMat(datSubB,disp_width);
+			if(outputResults){
+			//for testing correctness (prints the matrices that are multiplied to console)
+				printMat(datSubA,disp_width);
+				printMat(datSubB,disp_width);
+			}
 			
 			int rowDivTasks = disp_height/numTasks;
 			int rowModTasks = disp_height%numTasks;
@@ -133,7 +176,8 @@ int main(int argc, char *argv[])
 			MPI_Barrier(MPI_COMM_WORLD);
 			double end = MPI_Wtime();
 
-/*			//for testing correctness (prints multiplication result)			
+			if(outputResults){
+			//for testing correctness (prints multiplication result to file)			
 				for(index = 1; index < numTasks; index++){
 					if(index == taskid)
 						printLLMat(subR,disp_width, rowRange[0],taskid);
@@ -143,7 +187,9 @@ int main(int argc, char *argv[])
 					printLLMat(subR,disp_width, rowRange[0],taskid);
 
 				MPI_Barrier(MPI_COMM_WORLD);
-*/			
+			
+			}
+
 			//calculate elapsed time and output
 			printf("%d, %lld, %f\n", numTasks, disp_width, end - start);
 
