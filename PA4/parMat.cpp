@@ -96,8 +96,8 @@ int main(int argc, char *argv[])
 			//random generation input
 			if(!fin.good()){
 				for(index = 0; index < max_height * max_width; index++){
-						matA[index] = (1 + (random() % 9999));
-						matB[index] = (1 + (random() % 9999));
+						matA[index] = (1 + (random() % 99));
+						matB[index] = (1 + (random() % 99));
 				}
 			}
 
@@ -178,7 +178,7 @@ int main(int argc, char *argv[])
 
 			//start timer
 			double start = MPI_Wtime();
-								
+		      								
 			//perform timed operation
 			timedOperation( subA, subB, subR, rowRange, disp_width, numTasks, taskid, temp);
 				
@@ -279,7 +279,7 @@ int main(int argc, char *argv[])
 					subR[((index) * disp_width) + (jndex+colRange[1])] = 0;
 					for(kndex = 0; kndex < disp_width; kndex++){
 						subR[((index) * disp_width) + (jndex+colRange[1])] += 
-							(long long int) subA[index * disp_width + kndex] * (long long int) subB[jndex * disp_width + kndex];
+							subA[index * disp_width + kndex] * subB[jndex * disp_width + kndex];
 					}
 				}
 			}
@@ -292,11 +292,11 @@ int main(int argc, char *argv[])
 			//Pass around columns of matrix B
 			for(index = 0; index < numTasks; index++){
 				
-				if( index == taskid){
+				if( index == taskid && numTasks != 1){
 					MPI_Send(&tempRange[0], 2, MPI_INT, (index + 1) % numTasks, 13, MPI_COMM_WORLD);
 					MPI_Send(&temp[0], tempRange[0] * disp_width, MPI_INT, (index + 1) % numTasks, 14, MPI_COMM_WORLD);
 				}
-				else if( ((index + 1) % numTasks) == taskid){
+				else if( ((index + 1) % numTasks) == taskid && numTasks != 1){
 					MPI_Recv(&colRange[0], 2, MPI_INT, index, 13, MPI_COMM_WORLD, &status);
 					MPI_Recv(&subB[0], colRange[0] * disp_width, MPI_INT, index, 14, MPI_COMM_WORLD, &status);						
 				}
